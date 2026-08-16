@@ -22,6 +22,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Protocol
 
+import hashlib
+
 import numpy as np
 
 from hunl.blockers import blocker_matrix
@@ -83,7 +85,9 @@ def current_public_hand_strength(board) -> HandStrengthResult:
     return HandStrengthResult(b, ids, out, counts)
 
 
-def source_order_with_project_tiebreak(board) -> tuple[np.ndarray, np.ndarray, int]:
+def source_order_with_project_tiebreak(
+    board, *, tiebreak: str = "HAND_ID_ASC",
+) -> tuple[np.ndarray, np.ndarray, int]:
     """Weak→strong order satisfying the source constraint.
 
     Equal-strength hands are ordered by frozen hand id as an explicit
@@ -92,12 +96,32 @@ def source_order_with_project_tiebreak(board) -> tuple[np.ndarray, np.ndarray, i
     nodes at which an equal-strength class crosses the floor split boundary;
     these are exactly the places where the unpublished tie convention can
     change individual generated ranges.
+
+    On a river board only 27-81 distinct strengths exist among 1081 legal
+    hands, so 93-98% of split boundaries fall inside a tie class and this
+    convention dominates the generated range distribution.  ``tiebreak``
+    exists to measure that, not to offer a real choice: ``HAND_ID_ASC`` is
+    the project canonical value and every frozen artifact uses it.
+    Alternatives are ``HAND_ID_DESC`` and ``SHUFFLE_<seed>``.
     """
     hs = current_public_hand_strength(board)
     ids = hs.legal_hands
     vals = hs.strengths[ids]
-    # np.lexsort uses the final key as primary: strength primary, hand id tie.
-    order_pos = np.lexsort((ids, vals))
+    # np.lexsort uses the final key as primary: strength primary, then the
+    # tie key.  The tie key never reorders distinct strengths.
+    if tiebreak == "HAND_ID_ASC":
+        tie_key = ids
+    elif tiebreak == "HAND_ID_DESC":
+        tie_key = -ids.astype(np.int64)
+    elif tiebreak.startswith("SHUFFLE_"):
+        seed = int(tiebreak.split("_", 1)[1])
+        mixed = hashlib.sha256(
+            f"tiebreak:{seed}:{tuple(int(c) for c in board)}".encode()).digest()[:8]
+        tie_key = np.random.default_rng(
+            int.from_bytes(mixed, "big")).permutation(len(ids))
+    else:
+        raise ValueError(f"unknown tiebreak {tiebreak!r}")
+    order_pos = np.lexsort((tie_key, vals))
     ordered_ids = ids[order_pos]
     ordered_strengths = vals[order_pos]
 

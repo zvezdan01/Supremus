@@ -123,10 +123,11 @@ class _Float32FloorRangeGenerator:
     *not* copy DeepStack-Leduc's randomized odd-card split. Equal-strength tie
     order remains PROJECT_CANONICAL because the private HUNL code is absent.
     """
-    def __init__(self, board):
+    def __init__(self, board, *, tiebreak: str = "HAND_ID_ASC"):
         self.board = tuple(int(c) for c in board)
+        self.tiebreak = tiebreak
         self.order, self.strengths, self.boundary_ties = (
-            source_order_with_project_tiebreak(self.board)
+            source_order_with_project_tiebreak(self.board, tiebreak=tiebreak)
         )
         self.mask = possible_hands_mask(self.board)
 

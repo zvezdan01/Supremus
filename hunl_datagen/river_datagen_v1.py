@@ -69,6 +69,7 @@ class RiverDatagenV1Config:
     chip_quantization: ChipQuantization = ChipQuantization.NEAREST_HALF_UP
     master_seed: int = 20260816
     solver_backend: str = "numba_flat"  # exact-regression against Python backend
+    range_tiebreak: str = "HAND_ID_ASC"  # PROJECT_CANONICAL; see author_range_v2
     schema: str = "HUNL_RIVER_FULLCARD_V1_SUPREMUS_PAPER_RECONSTRUCTION"
 
     def __post_init__(self):
@@ -160,7 +161,7 @@ class RiverDataGeneratorV1:
 
     def make_batch_inputs(self, rng: CountingTHRandom) -> RiverBatchInputs:
         board, rejects = sample_river_board(rng)
-        rg = _Float32FloorRangeGenerator(board)
+        rg = _Float32FloorRangeGenerator(board, tiebreak=self.cfg.range_tiebreak)
         ranges = np.empty((2, self.cfg.batch_size, HAND_COUNT), dtype=np.float32)
         ranges[0] = rg.generate(self.cfg.batch_size, rng)
         ranges[1] = rg.generate(self.cfg.batch_size, rng)

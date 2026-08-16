@@ -1,0 +1,298 @@
+{
+  "baseline": "HAND_ID_ASC",
+  "caveat": "this measures the effect on individual subgames. A fixed convention biases the training distribution systematically rather than randomly, so a small per-sample delta does not by itself prove the trained network is unaffected.",
+  "dcfr_iterations": 4000,
+  "measurements": [
+    {
+      "board": [
+        22,
+        12,
+        5,
+        0,
+        30
+      ],
+      "boundary_ties": 990,
+      "pot_half": 1325,
+      "range_total_variation": [
+        0.6775978985001345,
+        0.7414641241239366
+      ],
+      "sample": 0,
+      "subgame_ev_abs_delta_pct_of_pot": 0.039728017009915684,
+      "subgame_ev_baseline_pct_of_pot": -43.42821659689434,
+      "subgame_ev_variant_pct_of_pot": -43.46794461390425,
+      "target_abs_delta_max_pct_of_pot": 39.739672390919814,
+      "target_abs_delta_mean_pct_of_pot": 2.378108259382853,
+      "variant": "HAND_ID_DESC"
+    },
+    {
+      "board": [
+        22,
+        12,
+        5,
+        0,
+        30
+      ],
+      "boundary_ties": 990,
+      "pot_half": 1325,
+      "range_total_variation": [
+        0.6578221239755717,
+        0.5870538311528424
+      ],
+      "sample": 0,
+      "subgame_ev_abs_delta_pct_of_pot": 0.0010035370523686638,
+      "subgame_ev_baseline_pct_of_pot": -43.42821659689434,
+      "subgame_ev_variant_pct_of_pot": -43.42721305984197,
+      "target_abs_delta_max_pct_of_pot": 31.168650501179247,
+      "target_abs_delta_mean_pct_of_pot": 1.8202076411344212,
+      "variant": "SHUFFLE_1"
+    },
+    {
+      "board": [
+        22,
+        12,
+        5,
+        0,
+        30
+      ],
+      "boundary_ties": 990,
+      "pot_half": 1325,
+      "range_total_variation": [
+        0.5905636763238346,
+        0.6653948985514059
+      ],
+      "sample": 0,
+      "subgame_ev_abs_delta_pct_of_pot": 0.14362869487171692,
+      "subgame_ev_baseline_pct_of_pot": -43.42821659689434,
+      "subgame_ev_variant_pct_of_pot": -43.28458790202262,
+      "target_abs_delta_max_pct_of_pot": 36.5032429245283,
+      "target_abs_delta_mean_pct_of_pot": 2.1140163652271795,
+      "variant": "SHUFFLE_2"
+    },
+    {
+      "board": [
+        2,
+        28,
+        32,
+        38,
+        31
+      ],
+      "boundary_ties": 1022,
+      "pot_half": 1443,
+      "range_total_variation": [
+        0.76838326447257,
+        0.7126838682667836
+      ],
+      "sample": 1,
+      "subgame_ev_abs_delta_pct_of_pot": 0.19121866790601239,
+      "subgame_ev_baseline_pct_of_pot": -45.736620804325376,
+      "subgame_ev_variant_pct_of_pot": -45.54540213641936,
+      "target_abs_delta_max_pct_of_pot": 20.83209613422016,
+      "target_abs_delta_mean_pct_of_pot": 1.9063376081668062,
+      "variant": "HAND_ID_DESC"
+    },
+    {
+      "board": [
+        2,
+        28,
+        32,
+        38,
+        31
+      ],
+      "boundary_ties": 1022,
+      "pot_half": 1443,
+      "range_total_variation": [
+        0.7284803370940589,
+        0.5990573135410969
+      ],
+      "sample": 1,
+      "subgame_ev_abs_delta_pct_of_pot": 0.2295356681828009,
+      "subgame_ev_baseline_pct_of_pot": -45.736620804325376,
+      "subgame_ev_variant_pct_of_pot": -45.50708513614257,
+      "target_abs_delta_max_pct_of_pot": 30.482395143039675,
+      "target_abs_delta_mean_pct_of_pot": 1.845138156670955,
+      "variant": "SHUFFLE_1"
+    },
+    {
+      "board": [
+        2,
+        28,
+        32,
+        38,
+        31
+      ],
+      "boundary_ties": 1022,
+      "pot_half": 1443,
+      "range_total_variation": [
+        0.7064299096962036,
+        0.5956956687693752
+      ],
+      "sample": 1,
+      "subgame_ev_abs_delta_pct_of_pot": 0.1882208924724016,
+      "subgame_ev_baseline_pct_of_pot": -45.736620804325376,
+      "subgame_ev_variant_pct_of_pot": -45.54839991185297,
+      "target_abs_delta_max_pct_of_pot": 21.516267243806304,
+      "target_abs_delta_mean_pct_of_pot": 1.4903483487570512,
+      "variant": "SHUFFLE_2"
+    },
+    {
+      "board": [
+        50,
+        24,
+        51,
+        12,
+        28
+      ],
+      "boundary_ties": 965,
+      "pot_half": 707,
+      "range_total_variation": [
+        0.6654886277155541,
+        0.6405842563925648
+      ],
+      "sample": 2,
+      "subgame_ev_abs_delta_pct_of_pot": 0.200251734259288,
+      "subgame_ev_baseline_pct_of_pot": -12.75849443569966,
+      "subgame_ev_variant_pct_of_pot": -12.558242701440372,
+      "target_abs_delta_max_pct_of_pot": 22.6944940936616,
+      "target_abs_delta_mean_pct_of_pot": 1.868772652054718,
+      "variant": "HAND_ID_DESC"
+    },
+    {
+      "board": [
+        50,
+        24,
+        51,
+        12,
+        28
+      ],
+      "boundary_ties": 965,
+      "pot_half": 707,
+      "range_total_variation": [
+        0.5261718394426431,
+        0.6007463493897964
+      ],
+      "sample": 2,
+      "subgame_ev_abs_delta_pct_of_pot": 0.07319984011788239,
+      "subgame_ev_baseline_pct_of_pot": -12.75849443569966,
+      "subgame_ev_variant_pct_of_pot": -12.685294595581778,
+      "target_abs_delta_max_pct_of_pot": 13.099850084016143,
+      "target_abs_delta_mean_pct_of_pot": 1.5684431737828284,
+      "variant": "SHUFFLE_1"
+    },
+    {
+      "board": [
+        50,
+        24,
+        51,
+        12,
+        28
+      ],
+      "boundary_ties": 965,
+      "pot_half": 707,
+      "range_total_variation": [
+        0.5287175976311183,
+        0.563274517854575
+      ],
+      "sample": 2,
+      "subgame_ev_abs_delta_pct_of_pot": 0.14184043906509958,
+      "subgame_ev_baseline_pct_of_pot": -12.75849443569966,
+      "subgame_ev_variant_pct_of_pot": -12.616653996634561,
+      "target_abs_delta_max_pct_of_pot": 16.716441541615097,
+      "target_abs_delta_mean_pct_of_pot": 1.4996403187817626,
+      "variant": "SHUFFLE_2"
+    },
+    {
+      "board": [
+        7,
+        2,
+        27,
+        36,
+        48
+      ],
+      "boundary_ties": 995,
+      "pot_half": 100,
+      "range_total_variation": [
+        0.7164215772282287,
+        0.721320267592429
+      ],
+      "sample": 3,
+      "subgame_ev_abs_delta_pct_of_pot": 0.008286701996509938,
+      "subgame_ev_baseline_pct_of_pot": -16.146396416073983,
+      "subgame_ev_variant_pct_of_pot": -16.138109714077473,
+      "target_abs_delta_max_pct_of_pot": 25.234573364257812,
+      "target_abs_delta_mean_pct_of_pot": 2.8241304954576156,
+      "variant": "HAND_ID_DESC"
+    },
+    {
+      "board": [
+        7,
+        2,
+        27,
+        36,
+        48
+      ],
+      "boundary_ties": 995,
+      "pot_half": 100,
+      "range_total_variation": [
+        0.6627718944761347,
+        0.6183804426392645
+      ],
+      "sample": 3,
+      "subgame_ev_abs_delta_pct_of_pot": 0.04908880236449975,
+      "subgame_ev_baseline_pct_of_pot": -16.146396416073983,
+      "subgame_ev_variant_pct_of_pot": -16.19548521843848,
+      "target_abs_delta_max_pct_of_pot": 24.252822875976562,
+      "target_abs_delta_mean_pct_of_pot": 2.4649693971629247,
+      "variant": "SHUFFLE_1"
+    },
+    {
+      "board": [
+        7,
+        2,
+        27,
+        36,
+        48
+      ],
+      "boundary_ties": 995,
+      "pot_half": 100,
+      "range_total_variation": [
+        0.7015692834911325,
+        0.6575404600560077
+      ],
+      "sample": 3,
+      "subgame_ev_abs_delta_pct_of_pot": 0.0014797969376867393,
+      "subgame_ev_baseline_pct_of_pot": -16.146396416073983,
+      "subgame_ev_variant_pct_of_pot": -16.14787621301167,
+      "target_abs_delta_max_pct_of_pot": 25.44227600097656,
+      "target_abs_delta_mean_pct_of_pot": 2.5022029863898987,
+      "variant": "SHUFFLE_2"
+    }
+  ],
+  "note": "read the EV delta against the 0.121% LP anchor gap: a tie-break effect below that is inside the project's own solver-validation tolerance, one above it is not.",
+  "question": "how much do generated targets move when the unpublished equal-strength tie-break changes?",
+  "reference_lp_anchor_gap_pct_of_pot": 0.121,
+  "samples": 4,
+  "schema": "HUNL_RIVER_TIEBREAK_SENSITIVITY_V1",
+  "seconds": 512.9793236229998,
+  "subgame_ev_abs_delta_pct_of_pot": {
+    "max": 0.2295356681828009,
+    "mean": 0.10562356601968187,
+    "min": 0.0010035370523686638
+  },
+  "target_abs_delta_max_pct_of_pot": {
+    "max": 39.739672390919814,
+    "mean": 25.640231858183103,
+    "min": 13.099850084016143
+  },
+  "target_abs_delta_mean_pct_of_pot": {
+    "max": 2.8241304954576156,
+    "mean": 2.0235262835807513,
+    "min": 1.4903483487570512
+  },
+  "variants": [
+    "HAND_ID_DESC",
+    "SHUFFLE_1",
+    "SHUFFLE_2"
+  ],
+  "verdict": "NON-TRIVIAL \u2014 comparable to solver convergence error"
+}

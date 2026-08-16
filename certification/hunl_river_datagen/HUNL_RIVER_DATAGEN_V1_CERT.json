@@ -67,7 +67,7 @@
     "dcfr_value_chips": -85.14958196723425,
     "lp_value_chips": -84.90762242291194,
     "relative_to_total_pot": 0.001209797721611565,
-    "seconds": 8.106215476989746,
+    "seconds": 11.64046335220337,
     "support_each_player": 6
   },
   "river_range_combinatorics": {
@@ -80,7 +80,7 @@
     ],
     "raw_target_sha256": "f2b7b33df8339638c4d83e1d8067521d07ce4862ad449c218d827c2bce88062d",
     "raw_targets_primary": true,
-    "seconds": 0.32458043098449707,
+    "seconds": 6.776104688644409,
     "terminal_nodes": [
       205
     ],
