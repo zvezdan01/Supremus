@@ -119,16 +119,26 @@ def precompute(boards, pots, ranges, targets, provider, pot_convention="TOTAL_PO
         1, bucket_ids, legal.float()) > 0
 
     # Reach-weighted conditional expectation per bucket. Weights are the
-    # player's own range, taken from the normalized bucket ranges already in
-    # the network input, so the two views cannot drift apart.
+    # player's own card-space range; the normalization cancels in the ratio, so
+    # the raw ranges are used directly rather than the normalized bucket ranges
+    # stored in the network input.
     reach = torch.as_tensor(np.asarray(ranges, dtype=np.float32)) * legal.unsqueeze(1)
     weight = torch.zeros(n, 2, POSTFLOP_BUCKET_COUNT).scatter_add_(2, ids2, reach)
     weighted = torch.zeros(n, 2, POSTFLOP_BUCKET_COUNT).scatter_add_(
         2, ids2, reach * card_targets)
-    bucket_mean = torch.where(weight > 0, weighted / weight.clamp(min=1e-30),
+    has_reach = weight > 0
+    bucket_mean = torch.where(has_reach, weighted / weight.clamp(min=1e-30),
                               torch.zeros_like(weight))
+
+    # Two masks, deliberately different. A sum is defined for any bucket that
+    # holds a legal hand. A conditional expectation is not defined where the
+    # player has no reach, and masking those in would score the network against
+    # a fabricated zero. The generated ranges give every legal hand positive
+    # mass, so the two coincide today, but float32 underflow in the recursive
+    # split could break that and the difference must not depend on luck.
+    sum_mask = occupied.unsqueeze(1).expand(-1, 2, -1)
     return (inputs, card_targets, legal, bucket_ids,
-            bucket_sum, bucket_mean, occupied)
+            bucket_sum, sum_mask, bucket_mean, has_reach)
 
 
 def card_values(model, inputs, bucket_ids):
@@ -144,17 +154,18 @@ def masked_huber(values, targets, legal):
 
 
 @torch.no_grad()
-def eval_bucket_huber(model, inputs, bucket_targets, occupied, chunk=512):
+def eval_bucket_huber(model, inputs, bucket_targets, mask, chunk=512):
     """Masked Huber in bucket space, on the network's raw 2000 outputs.
 
-    ``bucket_targets`` selects the reduction: sums or reach-weighted means.
+    ``bucket_targets`` selects the reduction and ``mask`` its matching validity
+    domain, both shaped [N, 2, buckets].
     """
     total = 0.0
     count = 0
     for lo in range(0, len(inputs), chunk):
         hi = min(len(inputs), lo + chunk)
         out = model(inputs[lo:hi]).reshape(-1, 2, POSTFLOP_BUCKET_COUNT)
-        m = occupied[lo:hi].unsqueeze(1).expand_as(out)
+        m = mask[lo:hi]
         n = int(m.sum())
         if n:
             total += float(F.smooth_l1_loss(out[m], bucket_targets[lo:hi][m],
@@ -207,7 +218,8 @@ def verify_vectorized_path(model, boards, pots, ranges, targets, provider,
 
 def train_once(n_train, tr, va, epochs, batch_size, lr, seed, optimizer="adam"):
     inputs, card_targets, legal, bucket_ids = tr[:4]
-    v_inputs, v_targets, v_legal, v_ids, v_bsum, v_bmean, v_occupied = va
+    (v_inputs, v_targets, v_legal, v_ids,
+     v_bsum, v_bsum_mask, v_bmean, v_bmean_mask) = va
     torch.manual_seed(seed)
     model = DeepStackHUNLValueNet(HUNLValueNetworkSpec())
     make = torch.optim.AdamW if optimizer == "adamw" else torch.optim.Adam
@@ -229,8 +241,8 @@ def train_once(n_train, tr, va, epochs, batch_size, lr, seed, optimizer="adam"):
         val = eval_masked_huber(model, v_inputs, v_targets, v_legal, v_ids)
         trn = eval_masked_huber(model, inputs[:n_train], card_targets[:n_train],
                                 legal[:n_train], bucket_ids[:n_train])
-        val_sum = eval_bucket_huber(model, v_inputs, v_bsum, v_occupied)
-        val_mean = eval_bucket_huber(model, v_inputs, v_bmean, v_occupied)
+        val_sum = eval_bucket_huber(model, v_inputs, v_bsum, v_bsum_mask)
+        val_mean = eval_bucket_huber(model, v_inputs, v_bmean, v_bmean_mask)
         history.append({"epoch": epoch, "train": trn, "validation": val,
                         "validation_bucket_sum": val_sum,
                         "validation_bucket_mean": val_mean})
