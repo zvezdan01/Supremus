@@ -1,0 +1,148 @@
+{
+  "caveat": "three subgames is far too small for a training-quality claim. This measures the target geometry only, which is what decides whether the mechanism exists at all.",
+  "factorization_identity_max_abs_residual_chips": 4.547473508864641e-13,
+  "interpretation": [
+    "matchup averages 990/1081 = 0.9158 on a 5-card board: blockers remove only 91 of 1081 hands, so the reach factor is nearly uniform",
+    "coefficient of variation 4-8% and max/min under 1.9 mean the factor carries little of the CFV signal",
+    "dividing by a factor near 0.92 makes the EV target's spread slightly LARGER than the CFV target's, not smaller"
+  ],
+  "measurements": [
+    {
+      "board": [
+        6,
+        1,
+        46,
+        50,
+        0
+      ],
+      "corr_abs_cfv_matchup": 0.25042160608075564,
+      "live_hands": 1081,
+      "matchup_coefficient_of_variation": 0.06042463637502785,
+      "matchup_max": 0.9984646724216242,
+      "matchup_max_over_min": 1.4023599356248087,
+      "matchup_mean": 0.9158186951915777,
+      "matchup_min": 0.7119888746513336,
+      "player": 0,
+      "std_cfv_chips": 755.6217781803074,
+      "std_ev_chips": 808.8075105360059
+    },
+    {
+      "board": [
+        6,
+        1,
+        46,
+        50,
+        0
+      ],
+      "corr_abs_cfv_matchup": 0.40012178081166183,
+      "live_hands": 1081,
+      "matchup_coefficient_of_variation": 0.04181969484018635,
+      "matchup_max": 0.9986699417825307,
+      "matchup_max_over_min": 1.3042042278438108,
+      "matchup_mean": 0.9158186952831009,
+      "matchup_min": 0.765731256241664,
+      "player": 1,
+      "std_cfv_chips": 536.4760303351193,
+      "std_ev_chips": 573.8022171312023
+    },
+    {
+      "board": [
+        22,
+        12,
+        17,
+        3,
+        34
+      ],
+      "corr_abs_cfv_matchup": 0.2522109113271292,
+      "live_hands": 1081,
+      "matchup_coefficient_of_variation": 0.07077869391730397,
+      "matchup_max": 0.9966745486471917,
+      "matchup_max_over_min": 1.662343151286204,
+      "matchup_mean": 0.9158186992579105,
+      "matchup_min": 0.5995600534558916,
+      "player": 0,
+      "std_cfv_chips": 2568.91361886904,
+      "std_ev_chips": 2788.0979983859515
+    },
+    {
+      "board": [
+        22,
+        12,
+        17,
+        3,
+        34
+      ],
+      "corr_abs_cfv_matchup": 0.24493418678070225,
+      "live_hands": 1081,
+      "matchup_coefficient_of_variation": 0.04897198515355473,
+      "matchup_max": 0.9861517895482228,
+      "matchup_max_over_min": 1.3841464532169538,
+      "matchup_mean": 0.9158186828508507,
+      "matchup_min": 0.7124620283180767,
+      "player": 1,
+      "std_cfv_chips": 732.9704684584237,
+      "std_ev_chips": 783.59389969876
+    },
+    {
+      "board": [
+        30,
+        27,
+        50,
+        25,
+        47
+      ],
+      "corr_abs_cfv_matchup": 0.45773832960202127,
+      "live_hands": 1081,
+      "matchup_coefficient_of_variation": 0.07711210378808768,
+      "matchup_max": 0.9913922782923219,
+      "matchup_max_over_min": 1.8833754760544643,
+      "matchup_mean": 0.915818700282605,
+      "matchup_min": 0.5263912007441114,
+      "player": 0,
+      "std_cfv_chips": 1570.1075024397105,
+      "std_ev_chips": 1736.9630672025576
+    },
+    {
+      "board": [
+        30,
+        27,
+        50,
+        25,
+        47
+      ],
+      "corr_abs_cfv_matchup": -0.07726279145565566,
+      "live_hands": 1081,
+      "matchup_coefficient_of_variation": 0.05711606743657841,
+      "matchup_max": 0.9892840854941094,
+      "matchup_max_over_min": 1.3590413605681666,
+      "matchup_mean": 0.915818692129783,
+      "matchup_min": 0.727927871952716,
+      "player": 1,
+      "std_cfv_chips": 1249.8780650031395,
+      "std_ev_chips": 1399.6569266589308
+    }
+  ],
+  "question": "does the DEVN (predict-EV) modification have a mechanism to exploit on this project's river data?",
+  "schema": "HUNL_RIVER_EV_FACTORIZATION_ANALYSIS_V1",
+  "subgames": 3,
+  "summary": {
+    "abs_corr_cfv_matchup_range": [
+      0.07726279145565566,
+      0.45773832960202127
+    ],
+    "matchup_cv_range": [
+      0.04181969484018635,
+      0.07711210378808768
+    ],
+    "matchup_max_over_min_range": [
+      1.3042042278438108,
+      1.8833754760544643
+    ],
+    "matchup_mean_across_all": 0.9158186941659713,
+    "std_ev_over_std_cfv_range": [
+      1.0690661266978558,
+      1.1198347789673508
+    ]
+  },
+  "verdict": "NO MEANINGFUL MECHANISM HERE \u2014 matchup is near-constant"
+}

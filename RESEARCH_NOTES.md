@@ -13,58 +13,129 @@ This corroborates rather than resolves the project's blockers. The five
 unresolved items in `HUNL_RIVER_VALUE_V1_MILESTONE.md` — private 1000-bucket
 river artifact, integer-chip rounding of the Table-2 fractions, private RNG and
 dataset ordering, the river-training update mode, and original weights — remain
-closed by absence of the private code, exactly as the DeepStack-side blockers
-are in `quant-trade`.
+closed by absence of the private code.
 
 Status: **NEGATIVE FINDING, recorded so it is not re-searched blind.** It is not
 proof of destruction; it is proof that no public copy was locatable on this
 date.
 
-## Adjacent work worth evaluating: predict EV, not CFV
+---
+
+# DEVN — "predict expected values instead": EVALUATED, NOT ADOPTED
 
 Jeremiasz Wołosiuk, Maciej Świechowski, Jacek Mańdziuk,
 *Don't Predict Counterfactual Values, Predict Expected Values Instead*,
-AAAI-23. **Supplementary code is public:**
-`https://github.com/jwolosiuk/dont-predict-cfvs-predict-evs-instead`
+AAAI-23. Supplementary code and PDF at
+`github.com/jwolosiuk/dont-predict-cfvs-predict-evs-instead`.
 
-### The claim
+## Licence position
 
-A counterfactual value factorizes into two parts:
+That repository contains **no LICENCE file**, and its README states the full
+code version is used commercially. It is therefore all-rights-reserved. The
+supplementary PDF is © 2023 AAAI, all rights reserved.
 
-    CFV(state) = P(opponent reaches state) × EV(payoff in state)
+Consequently: **nothing from it is vendored, copied or derived in this
+repository.** The published method is referenced and measured; the authors'
+expression of it is not reused. `run_ev_factorization_analysis.py` was written
+against this project's own primitives.
 
-The first factor is the opponent's reach probability, which is *already an
-input* to the network — it is the opponent range. So a DCVN that regresses CFV
-directly is spending capacity relearning a quantity the caller can compute
-exactly. Their modification: have the network predict only the **EV** factor,
-then multiply by the exactly-known reach. They report materially more accurate
-CFV estimates from the same architecture.
+## The method
 
-### Why it is interesting here
+A counterfactual value factorizes exactly:
 
-The interface this project is bound to is fixed by the paper: 2001 inputs,
-2000 outputs, 7×500 PReLU. The EV factorization does **not** change that
-interface — the first 2000 inputs already *are* the two bucket ranges, so the
-reach factor is available at the output stage without any new input. It is a
-change of regression target and of the final multiply, sitting exactly where
-`inverse_bucket_outputs` and `masked_card_huber_loss` already sit in
-`hunl/value_training.py`.
+    CFV(h) = matchup(h) · EV(h)
+    matchup(h) = Σ over opponent hands compatible with h of the opponent range
 
-That makes it unusually cheap to test: the frozen full-card targets under
-`certification/hunl_river_value/` are raw chip CFVs, so an EV-target variant can
-be derived from them without re-solving a single subgame — which is precisely
-the property the V1 milestone was designed to preserve.
+`matchup` is computable in closed form from the opponent range, which the
+network already receives as input. So a network regressing CFV directly spends
+capacity relearning a known quantity. DEVN regresses EV and multiplies by the
+exact matchup afterwards.
 
-### Discipline
+The identity is real, and it holds on this project's data to machine precision —
+**max |EV·matchup − CFV| = 4.5e-13 chips** across all three frozen
+4,000-iteration subgames, both players (`run_ev_factorization_analysis.py`).
 
-This is **third-party 2023 work, not Supremus.** It must not be folded into the
-Supremus reconstruction any more than Supremus may be folded into the forensic
-DeepStack baseline in `quant-trade`. If pursued, it belongs behind an explicit
-flag as a separate `EV_FACTORED` profile, with its own certificate, and the
-paper-faithful CFV-target path must stay the default and stay reproducible.
+## Why it is not adopted
 
-Status: **EVALUATED, NOT ADOPTED.** No code from that repository has been read
-or copied into this project.
+### 1. The paper's own comparable evidence is for the *no-abstraction* setting
+
+The headline **3.37–8.39% relative improvement** comes from supplementary
+settings VI and VII, both of which use **"identity bucketing" — no card
+abstraction**, each hand in its own bucket, plus a 52-element one-hot board
+encoding as extra input.
+
+For the five settings that *do* use bucketing (supplementary Tables 1–5), the
+only figures given are each method's loss **on its own target**. EV-loss and
+CFV-loss are losses on different quantities at different scales, so those tables
+do not support a cross-method comparison in either direction — including the
+naive reading that CFV wins there.
+
+This project uses a 1000-bucket abstraction, because Supremus and DeepStack do.
+The regime where DEVN is demonstrated is not the regime this project is in.
+
+### 2. It breaks bucket-space zero-sum enforcement
+
+The supplementary is explicit: under DEVN the zero-sum property **cannot** be
+enforced on bucketed EVs, because the outer network would need matchups for
+bucketed ranges, which the authors call not feasible. It can only be imposed
+after inverse bucketing.
+
+This project's `DeepStackHUNLValueNet` enforces zero-sum as an outer layer in
+**bucket space**, and `HUNL_RIVER_VALUE_V1_CERT` certifies it there
+(`bucket_weighted_zero_sum_residual_after_training`, tolerance 5e-5). Adopting
+DEVN would move that guarantee downstream and invalidate the existing
+certificate. The authors state they did not verify the playing-strength impact
+of not enforcing it, and left it as further study.
+
+Trading a certified architectural invariant for an unquantified one is not a
+trade this project should make.
+
+### 3. On this project's river data the mechanism is nearly absent
+
+Measured on the three real 4,000-iteration subgames:
+
+| quantity | measured |
+|---|---|
+| mean matchup | **0.9158** = 990/1081 |
+| coefficient of variation | 4.2% – 7.7% |
+| max/min across hands | 1.30 – 1.88 |
+| \|corr(\|CFV\|, matchup)\| | 0.077 – 0.458 |
+| std(EV) / std(CFV) | **1.07 – 1.12** |
+
+On a five-card river board, blockers remove only 91 of 1081 hands, so the reach
+factor is nearly uniform. Dividing by a near-constant ≈0.92 makes the EV
+target's spread slightly **larger** than the CFV target's — the opposite of the
+simplification the method is meant to deliver.
+
+The authors' own experiments are on 4-card (turn) boards, where more of the deck
+is live and their generated ranges may be far more concentrated than the
+DeepStack-style `R(S,p)` ranges used here. Their result is not contradicted;
+it simply does not transfer to this setting on the evidence available.
+
+## If it is ever revisited
+
+The prerequisites, in order:
+
+1. a river network trained on enough data that a few-percent difference is
+   measurable at all — the current 3-sample checkpoint is deliberate
+   overfitting and cannot resolve this;
+2. a decision on where zero-sum is enforced, with a certificate for the new
+   position;
+3. the comparison run in **card space after inverse bucketing**, which is this
+   project's loss convention and the only space where the two methods are
+   directly comparable.
+
+The frozen raw chip CFVs make step 3 cheap: an EV-target variant is derivable
+from them without re-solving a single subgame. That is exactly the property the
+V1 milestone was designed to preserve, so revisiting costs nothing but training
+time.
+
+Any such work belongs behind an explicit `EV_FACTORED` profile with its own
+certificate, with the paper-faithful CFV path remaining the default — the same
+lineage discipline that keeps Supremus out of the forensic DeepStack baseline in
+`quant-trade`.
+
+---
 
 ## Schmid correspondence
 
