@@ -61,7 +61,7 @@ def load_shards(data_dir: Path):
             np.concatenate(ranges), np.concatenate(targets), len(files))
 
 
-def precompute(boards, pots, ranges, targets, provider):
+def precompute(boards, pots, ranges, targets, provider, pot_convention="TOTAL_POT"):
     """Bucket every sample once; training then never touches numpy again.
 
     Equivalent to calling prepare_river_training_batch per row, but the
@@ -76,7 +76,8 @@ def precompute(boards, pots, ranges, targets, provider):
     for i in range(n):
         batch = prepare_river_training_batch(
             boards=[boards[i]], ranges=ranges[i:i + 1], pot_halves=pots[i:i + 1],
-            targets_chips=targets[i:i + 1], bucket_provider=provider, stack=STACK)
+            targets_chips=targets[i:i + 1], bucket_provider=provider, stack=STACK,
+            pot_convention=pot_convention)
         inputs[i] = batch.inputs[0]
         card_targets[i] = batch.card_targets[0]
         legal[i] = batch.legal_mask[0]
@@ -98,12 +99,17 @@ def masked_huber(values, targets, legal):
 
 
 def verify_vectorized_path(model, boards, pots, ranges, targets, provider,
-                           inputs, card_targets, legal, bucket_ids) -> float:
-    """The fast path must agree with the project's reference implementation."""
+                           inputs, card_targets, legal, bucket_ids,
+                           pot_convention="TOTAL_POT") -> float:
+    """The fast path must agree with the project's reference implementation.
+
+    The convention is threaded through, or a POT_HALF run would compare itself
+    against a TOTAL_POT reference and fail for the wrong reason.
+    """
     reference_batch = prepare_river_training_batch(
         boards=[boards[i] for i in range(min(4, len(boards)))],
         ranges=ranges[:4], pot_halves=pots[:4], targets_chips=targets[:4],
-        bucket_provider=provider, stack=STACK)
+        bucket_provider=provider, stack=STACK, pot_convention=pot_convention)
     with torch.no_grad():
         ref = float(loss_on_prepared_batch(model, reference_batch))
         fast = float(masked_huber(card_values(model, inputs[:4], bucket_ids[:4]),
@@ -111,12 +117,13 @@ def verify_vectorized_path(model, boards, pots, ranges, targets, provider,
     return abs(ref - fast)
 
 
-def train_once(n_train, tr, va, epochs, batch_size, lr, seed):
+def train_once(n_train, tr, va, epochs, batch_size, lr, seed, optimizer="adam"):
     inputs, card_targets, legal, bucket_ids = tr
     v_inputs, v_targets, v_legal, v_ids = va
     torch.manual_seed(seed)
     model = DeepStackHUNLValueNet(HUNLValueNetworkSpec())
-    opt = torch.optim.Adam(model.parameters(), lr=lr)
+    make = torch.optim.AdamW if optimizer == "adamw" else torch.optim.Adam
+    opt = make(model.parameters(), lr=lr)
     best = float("inf")
     history = []
     for epoch in range(epochs):
@@ -145,7 +152,15 @@ def main() -> None:
     ap.add_argument("--val-fraction", type=float, default=0.2)
     ap.add_argument("--epochs", type=int, default=60)
     ap.add_argument("--batch-size", type=int, default=32)
+    # Adam at 1e-3 is the released DeepStack-Leduc setting (train.lua:78,80 and
+    # arguments.lua:54); AdamW at 3e-4 is the third-party DEVN choice. Default
+    # to the anchored one.
     ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--optimizer", choices=("adam", "adamw"), default="adam")
+    ap.add_argument("--pot-convention", choices=("TOTAL_POT", "POT_HALF"),
+                    default="TOTAL_POT",
+                    help="TOTAL_POT reads the Supremus paper literally; "
+                         "POT_HALF matches released DeepStack-Leduc")
     ap.add_argument("--threads", type=int, default=0, help="0 = leave torch default")
     args = ap.parse_args()
 
@@ -166,14 +181,17 @@ def main() -> None:
     print(f"split: {len(train_idx)} train / {len(val_idx)} validation", flush=True)
 
     t0 = time.perf_counter()
-    tr = precompute(boards[train_idx], pots[train_idx], ranges[train_idx], targets[train_idx], provider)
-    va = precompute(boards[val_idx], pots[val_idx], ranges[val_idx], targets[val_idx], provider)
+    tr = precompute(boards[train_idx], pots[train_idx], ranges[train_idx],
+                    targets[train_idx], provider, args.pot_convention)
+    va = precompute(boards[val_idx], pots[val_idx], ranges[val_idx],
+                    targets[val_idx], provider, args.pot_convention)
     print(f"bucketed in {time.perf_counter()-t0:.1f}s", flush=True)
 
     torch.manual_seed(SEED)
     probe = DeepStackHUNLValueNet(HUNLValueNetworkSpec())
     delta = verify_vectorized_path(probe, boards[train_idx], pots[train_idx],
-                                   ranges[train_idx], targets[train_idx], provider, *tr)
+                                   ranges[train_idx], targets[train_idx], provider, *tr,
+                                   pot_convention=args.pot_convention)
     print(f"fast path vs reference loss_on_prepared_batch: |delta| = {delta:.3e}", flush=True)
     if delta > 1e-6:
         raise SystemExit("vectorized training path disagrees with the reference implementation")
@@ -186,7 +204,8 @@ def main() -> None:
     points = []
     for size in sizes:
         started = time.perf_counter()
-        best, final_train, _ = train_once(size, tr, va, args.epochs, args.batch_size, args.lr, SEED)
+        best, final_train, _ = train_once(size, tr, va, args.epochs, args.batch_size,
+                                          args.lr, SEED, args.optimizer)
         points.append({
             "train_samples": size,
             "best_validation_huber": best,
@@ -204,6 +223,8 @@ def main() -> None:
         "epochs": args.epochs,
         "batch_size": args.batch_size,
         "learning_rate": args.lr,
+        "optimizer": args.optimizer,
+        "pot_convention": args.pot_convention,
         "loss_convention": "card-space masked Huber after inverse bucketing, "
                            "targets = raw chips / total pot",
         "reference_encoding_floor": ENCODING_FLOOR,

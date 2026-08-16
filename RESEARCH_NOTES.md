@@ -112,6 +112,41 @@ is live and their generated ranges may be far more concentrated than the
 DeepStack-style `R(S,p)` ranges used here. Their result is not contradicted;
 it simply does not transfer to this setting on the evidence available.
 
+## Design comparison, read from the code
+
+Facts about the three implementations, from reading. No code is reproduced.
+The middle column is the one that carries evidential weight: it is by DeepStack's
+own authors. Full citations in `certification/RELEASED_CODE_EVIDENCE.md`.
+
+| | released DeepStack-Leduc | this project | DEVN (Wołosiuk et al.) |
+|---|---|---|---|
+| input / output | 2M+1 → 2M | **same** (2001 → 2000) | **same** shape |
+| hidden layers | `Linear(in,50) → PReLU → Linear` (Leduc-scale toy) | 7×500 PReLU (HUNL, per paper) | N×1024 or ×500, PReLU |
+| normalization | none | none | **BatchNorm1d**, optional dropout |
+| zero-sum | **outer layer, bucket space** | **outer layer, bucket space** | **none** |
+| optimizer | **`optim.adam`, lr 1e-3** | Adam, lr 1e-3 | AdamW, lr 3e-4 |
+| batch | 100 | project choice | 2 |
+| loss | SmoothL1, masked, **bucket space** | SmoothL1, masked, **card space** | SmoothL1, masked, bucket space |
+| target reduction | **sum of card CFVs per bucket** | none — card-space loss | n/a (EV targets) |
+| pot feature / target scale | **per-player commitment** | total pot | pot / stack |
+
+Where the project agrees with the released code — interface, zero-sum placement,
+Adam at 1e-3, board sampling — it is anchored, not guessed. Where it diverges,
+there are now exactly two places, both deliberate and both measurable:
+**card-space loss** instead of bucket-space, and **total pot** instead of
+per-player scaling.
+
+One correction this table forces: AdamW at 3e-4 was previously the only
+independent hyperparameter data point available here, and it is the weaker one.
+The released DeepStack code uses plain Adam at 1e-3, which is already the
+project's setting. Start there; treat 3e-4 as an alternative to try if the
+curve stalls, not as an authority.
+
+DEVN's omission of any zero-sum layer is consistent with its supplementary
+stating that zero-sum cannot be enforced on bucketed EVs. It is a real
+architectural cost of the method, and the released DeepStack design pays that
+cost nowhere.
+
 ## If it is ever revisited
 
 The prerequisites, in order:
