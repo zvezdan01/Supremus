@@ -1,0 +1,12 @@
+# build artifacts / caches (sources are committed; binaries are rebuilt)
+__pycache__/
+*.pyc
+*.o
+*.a
+.pytest_cache/
+
+# generated training data — certificates and frozen anchors ARE committed,
+# bulk shards are not
+datagen_out/
+shards/
+*.shard

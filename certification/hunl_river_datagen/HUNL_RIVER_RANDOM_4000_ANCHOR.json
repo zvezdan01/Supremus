@@ -1,0 +1,50 @@
+{
+  "board": [
+    6,
+    1,
+    46,
+    50,
+    0
+  ],
+  "board_rejections": 0,
+  "boundary_ties": 996,
+  "chip_quantization": "NEAREST_HALF_UP",
+  "dcfr_alpha": 1.5,
+  "dcfr_beta": 0.0,
+  "dcfr_delay": 100,
+  "decision_nodes": [
+    104
+  ],
+  "iterations": 4000,
+  "mode": "PAPER_RECONSTRUCTION",
+  "npz_sha256": "f853aafa3d59d7b4db80acfb5a9a742204590cad2ce8f752e95b4af0fdfd6f89",
+  "pot_half": [
+    301
+  ],
+  "ranges_sha256": "61f5e2a9f9062aa89f065ca33bd00dd5db300a2eed1cba49837e1e371fe51144",
+  "replay_status": "EXACT hash observed in two separate completed executions",
+  "rng_draws_after": 2167,
+  "schema": "HUNL_RIVER_FULLCARD_V1_SUPREMUS_PAPER_RECONSTRUCTION",
+  "seconds": 33.57824492454529,
+  "seed": 123,
+  "solver_backend": "numba_flat",
+  "targets_chips_sha256": "f6301214462c3c41939164df77fc9c86b993911af33555b0b3a69928af2add4e",
+  "terminal_nodes": [
+    205
+  ],
+  "total_pot": [
+    602
+  ],
+  "unresolved": [
+    "private Supremus integer action rounding",
+    "private RNG/seed schedule",
+    "equal-strength tie order",
+    "DeepStack [100,100) intended semantics",
+    "private river bucketing artifact",
+    "whether private river training solve used simultaneous updates"
+  ],
+  "update_mode": "SIMULTANEOUS_RECONSTRUCTION",
+  "zero_sum_residual_chip": [
+    -1.4210854715202004e-14
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "action_quantization": {
+    "paper_rounding_rule_published": false,
+    "strict_integral_pot100_root_actions": [
+      [
+        "call",
+        0
+      ],
+      [
+        "raise",
+        200
+      ],
+      [
+        "raise",
+        250
+      ],
+      [
+        "raise",
+        300
+      ],
+      [
+        "raise",
+        350
+      ],
+      [
+        "raise",
+        500
+      ],
+      [
+        "raise",
+        20000
+      ]
+    ],
+    "strict_nonintegral_pot201": "FAIL_CLOSED_PASS"
+  },
+  "evidence_status": {
+    "dcfr_alpha": 1.5,
+    "dcfr_beta": 0.0,
+    "dcfr_iterations_per_player_paper": 4000,
+    "delayed_average_d": 100,
+    "integer_action_rounding_private_code": "UNRESOLVED",
+    "private_rng_seed_schedule": "UNRESOLVED",
+    "raw_fullcard_target_layer": "IMPLEMENTED",
+    "river_bucket_artifact": "MISSING",
+    "river_samples_paper": 50000000,
+    "simultaneous_update_for_river_private_code": "UNRESOLVED"
+  },
+  "input_generation": {
+    "board": [
+      6,
+      1,
+      46,
+      50,
+      0
+    ],
+    "board_rejections": 0,
+    "boundary_ties": 996,
+    "pot_half": [
+      301
+    ],
+    "rng_draws_after": 2167,
+    "seed": 123,
+    "sha256": "e1fedf3b1a48782d06ed639885137f9c04f5d7a6ab11f25ba0605da6f9b52d15"
+  },
+  "lp_anchor_500": {
+    "abs_gap_chips": 0.24195954432231304,
+    "dcfr_value_chips": -85.14958196723425,
+    "lp_value_chips": -84.90762242291194,
+    "relative_to_total_pot": 0.001209797721611565,
+    "seconds": 8.106215476989746,
+    "support_each_player": 6
+  },
+  "river_range_combinatorics": {
+    "compatible_opponents_per_hand": 990,
+    "legal_hands": 1081
+  },
+  "solve25": {
+    "decision_nodes": [
+      104
+    ],
+    "raw_target_sha256": "f2b7b33df8339638c4d83e1d8067521d07ce4862ad449c218d827c2bce88062d",
+    "raw_targets_primary": true,
+    "seconds": 0.32458043098449707,
+    "terminal_nodes": [
+      205
+    ],
+    "zero_sum_residual_chip": [
+      4.547473508864641e-13
+    ]
+  }
+}

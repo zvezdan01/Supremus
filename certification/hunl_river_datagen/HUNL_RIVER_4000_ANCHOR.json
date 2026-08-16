@@ -1,0 +1,19 @@
+{
+  "backend": "numba_flat_exact_vs_python_10_100_500",
+  "board": [
+    0,
+    5,
+    10,
+    15,
+    20
+  ],
+  "decision_nodes": 88,
+  "iterations": 4000,
+  "pot_half": 100,
+  "range_boundary_ties": 1011,
+  "root_cfv_strategy_sha256": "1edd8d59456d0d755bb8d940748941e11a002ff05ca0181d1b535885b46314b3",
+  "seconds": 26.716511487960815,
+  "terminal_nodes": 173,
+  "update_mode": "SIMULTANEOUS_RECONSTRUCTION",
+  "zero_sum_residual_chip": 6.394884621840902e-14
+}
