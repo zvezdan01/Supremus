@@ -1,0 +1,337 @@
+{
+  "chip_rounding": {
+    "baseline": "NEAREST_HALF_UP",
+    "measurements": [
+      {
+        "pot_half": 1325,
+        "sample": 0,
+        "subgame_ev_abs_delta_pct_of_pot": 0.0034040933249879224,
+        "target_abs_delta_max_pct_of_pot": 2.1836029628537736,
+        "target_abs_delta_mean_pct_of_pot": 0.14006812397742438,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          80,
+          157
+        ],
+        "tree_nodes_floor": [
+          80,
+          157
+        ]
+      },
+      {
+        "pot_half": 1443,
+        "sample": 1,
+        "subgame_ev_abs_delta_pct_of_pot": 0.004170876515846578,
+        "target_abs_delta_max_pct_of_pot": 1.9412732669568606,
+        "target_abs_delta_mean_pct_of_pot": 0.10668747425077818,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          74,
+          145
+        ],
+        "tree_nodes_floor": [
+          74,
+          145
+        ]
+      },
+      {
+        "pot_half": 707,
+        "sample": 2,
+        "subgame_ev_abs_delta_pct_of_pot": 0.001543642516735333,
+        "target_abs_delta_max_pct_of_pot": 0.3718223733645686,
+        "target_abs_delta_mean_pct_of_pot": 0.017900167577312397,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          90,
+          177
+        ],
+        "tree_nodes_floor": [
+          90,
+          177
+        ]
+      },
+      {
+        "pot_half": 100,
+        "sample": 3,
+        "subgame_ev_abs_delta_pct_of_pot": 0.0,
+        "target_abs_delta_max_pct_of_pot": 0.0,
+        "target_abs_delta_mean_pct_of_pot": 0.0,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          88,
+          173
+        ],
+        "tree_nodes_floor": [
+          88,
+          173
+        ]
+      },
+      {
+        "pot_half": 359,
+        "sample": 4,
+        "subgame_ev_abs_delta_pct_of_pot": 0.0004935881905310247,
+        "target_abs_delta_max_pct_of_pot": 0.7759625533165042,
+        "target_abs_delta_mean_pct_of_pot": 0.019356349616471567,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          102,
+          201
+        ],
+        "tree_nodes_floor": [
+          102,
+          201
+        ]
+      },
+      {
+        "pot_half": 4399,
+        "sample": 5,
+        "subgame_ev_abs_delta_pct_of_pot": 0.0023640242245215326,
+        "target_abs_delta_max_pct_of_pot": 0.6052303812833882,
+        "target_abs_delta_mean_pct_of_pot": 0.045611389324495696,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          36,
+          69
+        ],
+        "tree_nodes_floor": [
+          36,
+          69
+        ]
+      },
+      {
+        "pot_half": 224,
+        "sample": 6,
+        "subgame_ev_abs_delta_pct_of_pot": 0.001388568782700883,
+        "target_abs_delta_max_pct_of_pot": 0.6295067923409599,
+        "target_abs_delta_mean_pct_of_pot": 0.05838542485451374,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          110,
+          217
+        ],
+        "tree_nodes_floor": [
+          110,
+          217
+        ]
+      },
+      {
+        "pot_half": 100,
+        "sample": 7,
+        "subgame_ev_abs_delta_pct_of_pot": 0.0,
+        "target_abs_delta_max_pct_of_pot": 0.0,
+        "target_abs_delta_mean_pct_of_pot": 0.0,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          88,
+          173
+        ],
+        "tree_nodes_floor": [
+          88,
+          173
+        ]
+      },
+      {
+        "pot_half": 100,
+        "sample": 8,
+        "subgame_ev_abs_delta_pct_of_pot": 0.0,
+        "target_abs_delta_max_pct_of_pot": 0.0,
+        "target_abs_delta_mean_pct_of_pot": 0.0,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          88,
+          173
+        ],
+        "tree_nodes_floor": [
+          88,
+          173
+        ]
+      },
+      {
+        "pot_half": 11155,
+        "sample": 9,
+        "subgame_ev_abs_delta_pct_of_pot": 1.1839278307723688e-06,
+        "target_abs_delta_max_pct_of_pot": 0.0011468371806364857,
+        "target_abs_delta_mean_pct_of_pot": 7.554201150766249e-05,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          8,
+          13
+        ],
+        "tree_nodes_floor": [
+          8,
+          13
+        ]
+      },
+      {
+        "pot_half": 5241,
+        "sample": 10,
+        "subgame_ev_abs_delta_pct_of_pot": 1.1472332450690459e-05,
+        "target_abs_delta_max_pct_of_pot": 0.08834900007155123,
+        "target_abs_delta_mean_pct_of_pot": 0.000977647172541439,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          32,
+          61
+        ],
+        "tree_nodes_floor": [
+          32,
+          61
+        ]
+      },
+      {
+        "pot_half": 100,
+        "sample": 11,
+        "subgame_ev_abs_delta_pct_of_pot": 0.0,
+        "target_abs_delta_max_pct_of_pot": 0.0,
+        "target_abs_delta_mean_pct_of_pot": 0.0,
+        "tree_identical": true,
+        "tree_nodes_baseline": [
+          88,
+          173
+        ],
+        "tree_nodes_floor": [
+          88,
+          173
+        ]
+      }
+    ],
+    "subgame_ev_abs_delta_pct_of_pot": {
+      "max": 0.004170876515846578,
+      "mean": 0.001114787484633728,
+      "min": 0.0
+    },
+    "target_abs_delta_max_pct_of_pot": {
+      "max": 2.1836029628537736,
+      "mean": 0.5497411806140202,
+      "min": 0.0
+    },
+    "target_abs_delta_mean_pct_of_pot": {
+      "max": 0.14006812397742438,
+      "mean": 0.03242184323208709,
+      "min": 0.0
+    },
+    "trees_identical_on_all_samples": true,
+    "variant": "FLOOR",
+    "verdict": "NEGLIGIBLE"
+  },
+  "dcfr_iterations": 4000,
+  "pot_category_zero": {
+    "authority": "RiverTreeBuilder betting rules, mirroring ACPC game.c",
+    "baseline": "POINT_MASS_100",
+    "big_blind": 100,
+    "candidate_reading": "[100,200)",
+    "integers_tested": [
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199
+    ],
+    "reachable_pot_halves": [
+      100
+    ],
+    "reason": "a symmetric pot above the big blind requires a raise, and the smallest legal raise goes from 100 to 200, so no pot_half between 101 and 199 exists in HUNL. The gap between the first two printed intervals is a gap in the game, not a hole in the partition.",
+    "rejected_alternative": "CONTIGUOUS_100_200",
+    "resolved": true,
+    "verdict": "RESOLVED BY GAME RULES \u2014 the point mass is the only admissible reading"
+  },
+  "reference_lp_anchor_gap_pct_of_pot": 0.121,
+  "samples": 12,
+  "schema": "HUNL_RIVER_GENERATOR_FORK_SENSITIVITY_V1",
+  "seconds": 671.4692822090001
+}

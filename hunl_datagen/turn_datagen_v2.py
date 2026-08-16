@@ -191,18 +191,39 @@ def sample_turn_board(rng: CountingTHRandom) -> tuple[tuple[int, int, int, int],
     return (cards[0], cards[1], cards[2], cards[3]), rejects
 
 
-def sample_pot_half(rng: CountingTHRandom, mode: DatagenMode) -> int:
-    """Sample one printed HUNL pot category then one integer within it."""
+def sample_pot_half(rng: CountingTHRandom, mode: DatagenMode,
+                    *, bin0: str = "POINT_MASS_100") -> int:
+    """Sample one printed HUNL pot category then one integer within it.
+
+    The first printed category ``[100,100)`` is empty under standard interval
+    notation and no author correction has been recovered.  ``bin0`` selects a
+    reading so the ambiguity can be measured rather than silently fixed:
+
+    ``POINT_MASS_100``
+        PROJECT_CANONICAL, the value every frozen artifact uses: the category
+        is the single integer 100.
+    ``CONTIGUOUS_100_200``
+        the typo-correction reading ``[100,200)``.  The four remaining printed
+        intervals — [200,400), [400,2000), [2000,6000), [6000,19950] — are
+        contiguous, so this reading and only this reading makes the five a
+        complete partition.  Under the point mass, pots 101..199 are
+        unreachable.
+
+    Both branches consume exactly one integer draw: ``random_range`` is
+    ``(random_u32() %% (b + 1 - a)) + a``, one MT draw whatever the width, so
+    the RNG stream stays aligned across readings.
+    """
     if mode == DatagenMode.AUTHOR_STRICT:
         strict_readiness_check()
     cat = rng.random_range(0, 4)
     if cat == 0:
-        # PROJECT_CANONICAL: degenerate category. Still consume the integer
-        # draw, matching the published two-stage description and Torch random
-        # call shape (random_range(100,100) consumes one MT draw).
-        vals = reconstruction_v1_integer_values(0)
-        assert vals == (100,)
-        return rng.random_range(100, 100)
+        if bin0 == "POINT_MASS_100":
+            vals = reconstruction_v1_integer_values(0)
+            assert vals == (100,)
+            return rng.random_range(100, 100)
+        if bin0 == "CONTIGUOUS_100_200":
+            return rng.random_range(100, 199)
+        raise ValueError(f"unknown bin0 reading {bin0!r}")
     vals = literal_integer_values(cat)
     return rng.random_range(vals[0], vals[-1])
 

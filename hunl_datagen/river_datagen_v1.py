@@ -70,6 +70,7 @@ class RiverDatagenV1Config:
     master_seed: int = 20260816
     solver_backend: str = "numba_flat"  # exact-regression against Python backend
     range_tiebreak: str = "HAND_ID_ASC"  # PROJECT_CANONICAL; see author_range_v2
+    pot_bin0: str = "POINT_MASS_100"     # PROJECT_CANONICAL; see turn_datagen_v2
     schema: str = "HUNL_RIVER_FULLCARD_V1_SUPREMUS_PAPER_RECONSTRUCTION"
 
     def __post_init__(self):
@@ -118,9 +119,12 @@ class RiverSolvedBatch:
 def strict_readiness_check() -> None:
     raise UnresolvedSourceAmbiguity(
         "AUTHOR_STRICT Supremus river generation is blocked: private integer-"
-        "chip quantization of decimal Table-2 actions is unpublished; private "
-        "RNG/seed schedule is unpublished; equal-strength R(S,p) tie order is "
-        "unpublished; DeepStack [100,100) pot category is ambiguous"
+        "chip quantization of decimal Table-2 actions is unpublished (measured "
+        "negligible, worst 0.0042% of pot); private RNG/seed schedule is "
+        "unpublished; equal-strength R(S,p) tie order is unpublished (measured, "
+        "changes the sample not its value). The DeepStack [100,100) pot "
+        "category is no longer listed: it is resolved by the betting rules, "
+        "100 being the only reachable symmetric pot half below 200"
     )
 
 
@@ -167,7 +171,8 @@ class RiverDataGeneratorV1:
         ranges[1] = rg.generate(self.cfg.batch_size, rng)
         pots = np.empty(self.cfg.batch_size, dtype=np.int32)
         for i in range(self.cfg.batch_size):
-            pots[i] = sample_pot_half(rng, DatagenMode.RELEASED_CODE_ANCHORED)
+            pots[i] = sample_pot_half(rng, DatagenMode.RELEASED_CODE_ANCHORED,
+                                      bin0=self.cfg.pot_bin0)
         mask = possible_hands_mask(board).astype(np.uint8)
         masks = np.broadcast_to(mask, (self.cfg.batch_size, HAND_COUNT)).copy()
         return RiverBatchInputs(

@@ -1,0 +1,336 @@
+{
+  "backend": "solve_numba_flat, regression-checked against the Python reference backend",
+  "board": [
+    0,
+    5,
+    10,
+    15,
+    20
+  ],
+  "claim": "the DCFR+ solver agrees with an independent sequence-form LP across a range of restricted-support games, and the residual gap behaves as convergence error",
+  "convergence_axis": [
+    {
+      "abs_gap_chips": 1.0792296650834219,
+      "dcfr_seconds": 3.969342109000081,
+      "dcfr_value_chips": -0.359489884536909,
+      "gap_pct_of_pot": 0.5396148325417109,
+      "iterations": 500,
+      "lp_seconds": 33.534098427,
+      "lp_value_chips": 0.719739780546513,
+      "seed": 7,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.07540040338134801,
+      "dcfr_seconds": 3.9833738529998755,
+      "dcfr_value_chips": 22.1097617933426,
+      "gap_pct_of_pot": 0.03770020169067401,
+      "iterations": 500,
+      "lp_seconds": 32.52855433299999,
+      "lp_value_chips": 22.03436138996125,
+      "seed": 11,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 2.319527967494646,
+      "dcfr_seconds": 4.016312141000071,
+      "dcfr_value_chips": -5.948379968838608,
+      "gap_pct_of_pot": 1.159763983747323,
+      "iterations": 500,
+      "lp_seconds": 41.86074113900008,
+      "lp_value_chips": -8.267907936333254,
+      "seed": 13,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.4164411120428433,
+      "dcfr_seconds": 7.963179952000019,
+      "dcfr_value_chips": 0.3032986685036697,
+      "gap_pct_of_pot": 0.20822055602142164,
+      "iterations": 1000,
+      "lp_seconds": 33.534098427,
+      "lp_value_chips": 0.719739780546513,
+      "seed": 7,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.03742905085060144,
+      "dcfr_seconds": 7.960445407999941,
+      "dcfr_value_chips": 21.99693233911065,
+      "gap_pct_of_pot": 0.01871452542530072,
+      "iterations": 1000,
+      "lp_seconds": 32.52855433299999,
+      "lp_value_chips": 22.03436138996125,
+      "seed": 11,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.6413797432310533,
+      "dcfr_seconds": 7.931285859999889,
+      "dcfr_value_chips": -7.6265281931022,
+      "gap_pct_of_pot": 0.32068987161552664,
+      "iterations": 1000,
+      "lp_seconds": 41.86074113900008,
+      "lp_value_chips": -8.267907936333254,
+      "seed": 13,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.3211804271026813,
+      "dcfr_seconds": 15.90199858799997,
+      "dcfr_value_chips": 0.3985593534438317,
+      "gap_pct_of_pot": 0.16059021355134065,
+      "iterations": 2000,
+      "lp_seconds": 33.534098427,
+      "lp_value_chips": 0.719739780546513,
+      "seed": 7,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.08065644895958357,
+      "dcfr_seconds": 15.98953947599989,
+      "dcfr_value_chips": 22.115017838920835,
+      "gap_pct_of_pot": 0.040328224479791785,
+      "iterations": 2000,
+      "lp_seconds": 32.52855433299999,
+      "lp_value_chips": 22.03436138996125,
+      "seed": 11,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.14226806505287826,
+      "dcfr_seconds": 16.092626643999893,
+      "dcfr_value_chips": -8.410176001386132,
+      "gap_pct_of_pot": 0.07113403252643913,
+      "iterations": 2000,
+      "lp_seconds": 41.86074113900008,
+      "lp_value_chips": -8.267907936333254,
+      "seed": 13,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.13303649484092428,
+      "dcfr_seconds": 32.021395536,
+      "dcfr_value_chips": 0.5867032857055887,
+      "gap_pct_of_pot": 0.06651824742046214,
+      "iterations": 4000,
+      "lp_seconds": 33.534098427,
+      "lp_value_chips": 0.719739780546513,
+      "seed": 7,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.0342271618725114,
+      "dcfr_seconds": 32.619778946999986,
+      "dcfr_value_chips": 22.00013422808874,
+      "gap_pct_of_pot": 0.0171135809362557,
+      "iterations": 4000,
+      "lp_seconds": 32.52855433299999,
+      "lp_value_chips": 22.03436138996125,
+      "seed": 11,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.07550758717168193,
+      "dcfr_seconds": 31.964995373999955,
+      "dcfr_value_chips": -8.343415523504936,
+      "gap_pct_of_pot": 0.03775379358584097,
+      "iterations": 4000,
+      "lp_seconds": 41.86074113900008,
+      "lp_value_chips": -8.267907936333254,
+      "seed": 13,
+      "support_each_player": 64
+    }
+  ],
+  "gap_shrinks_with_iterations": true,
+  "note": "the DCFR side always solves the full 1326-hand game with ranges zeroed outside the support, so the engine under test is the production one; only the LP is restricted.",
+  "pot_half": 100,
+  "previous_certificate": {
+    "gap_pct_of_pot": 0.121,
+    "iterations": 500,
+    "support_each_player": 6
+  },
+  "schema": "HUNL_RIVER_LP_ANCHOR_GRID_V1",
+  "seconds": 470.6749753029999,
+  "support_axis": [
+    {
+      "abs_gap_chips": 1.7584185632226337,
+      "dcfr_seconds": 14.456578814000068,
+      "dcfr_value_chips": -83.14920385968931,
+      "gap_pct_of_pot": 0.8792092816113168,
+      "iterations": 1000,
+      "lp_seconds": 0.21848233200000777,
+      "lp_value_chips": -84.90762242291194,
+      "seed": 7,
+      "support_each_player": 6
+    },
+    {
+      "abs_gap_chips": 1.9549296298050791,
+      "dcfr_seconds": 8.07317922599998,
+      "dcfr_value_chips": -65.53236662338193,
+      "gap_pct_of_pot": 0.9774648149025396,
+      "iterations": 1000,
+      "lp_seconds": 0.0572455120000086,
+      "lp_value_chips": -67.48729625318701,
+      "seed": 11,
+      "support_each_player": 6
+    },
+    {
+      "abs_gap_chips": 0.748119378554577,
+      "dcfr_seconds": 7.9411696099999745,
+      "dcfr_value_chips": -76.07186823390788,
+      "gap_pct_of_pot": 0.3740596892772885,
+      "iterations": 1000,
+      "lp_seconds": 0.0509092669999518,
+      "lp_value_chips": -76.81998761246246,
+      "seed": 13,
+      "support_each_player": 6
+    },
+    {
+      "abs_gap_chips": 0.0030196141625680184,
+      "dcfr_seconds": 8.101566774000048,
+      "dcfr_value_chips": -41.48069719586597,
+      "gap_pct_of_pot": 0.0015098070812840092,
+      "iterations": 1000,
+      "lp_seconds": 0.5498277660000213,
+      "lp_value_chips": -41.48371681002854,
+      "seed": 7,
+      "support_each_player": 12
+    },
+    {
+      "abs_gap_chips": 0.004186154181029522,
+      "dcfr_seconds": 8.475878607000027,
+      "dcfr_value_chips": -14.85832703750722,
+      "gap_pct_of_pot": 0.002093077090514761,
+      "iterations": 1000,
+      "lp_seconds": 0.46660607000001164,
+      "lp_value_chips": -14.85414088332619,
+      "seed": 11,
+      "support_each_player": 12
+    },
+    {
+      "abs_gap_chips": 0.5748194448941604,
+      "dcfr_seconds": 8.471554566000009,
+      "dcfr_value_chips": -29.345111668551702,
+      "gap_pct_of_pot": 0.2874097224470802,
+      "iterations": 1000,
+      "lp_seconds": 0.43834386200001063,
+      "lp_value_chips": -29.919931113445863,
+      "seed": 13,
+      "support_each_player": 12
+    },
+    {
+      "abs_gap_chips": 0.5616655849605479,
+      "dcfr_seconds": 8.181218545999968,
+      "dcfr_value_chips": -1.3113077710886305,
+      "gap_pct_of_pot": 0.28083279248027393,
+      "iterations": 1000,
+      "lp_seconds": 2.8957815180000352,
+      "lp_value_chips": -0.7496421861280826,
+      "seed": 7,
+      "support_each_player": 24
+    },
+    {
+      "abs_gap_chips": 1.0021895930579472,
+      "dcfr_seconds": 8.048086652000052,
+      "dcfr_value_chips": -3.0991405872040634,
+      "gap_pct_of_pot": 0.5010947965289736,
+      "iterations": 1000,
+      "lp_seconds": 2.804571464999981,
+      "lp_value_chips": -2.096950994146116,
+      "seed": 11,
+      "support_each_player": 24
+    },
+    {
+      "abs_gap_chips": 0.41596209724494315,
+      "dcfr_seconds": 8.119416458000046,
+      "dcfr_value_chips": -55.76458204076255,
+      "gap_pct_of_pot": 0.20798104862247158,
+      "iterations": 1000,
+      "lp_seconds": 2.618040570000062,
+      "lp_value_chips": -55.348619943517605,
+      "seed": 13,
+      "support_each_player": 24
+    },
+    {
+      "abs_gap_chips": 0.03129100174819044,
+      "dcfr_seconds": 8.067919656999948,
+      "dcfr_value_chips": 3.1546632779921824,
+      "gap_pct_of_pot": 0.01564550087409522,
+      "iterations": 1000,
+      "lp_seconds": 13.705003748999957,
+      "lp_value_chips": 3.123372276243992,
+      "seed": 7,
+      "support_each_player": 48
+    },
+    {
+      "abs_gap_chips": 0.09213442452265674,
+      "dcfr_seconds": 8.124282560999973,
+      "dcfr_value_chips": 11.806079525440316,
+      "gap_pct_of_pot": 0.04606721226132837,
+      "iterations": 1000,
+      "lp_seconds": 16.468682773999944,
+      "lp_value_chips": 11.898213949962972,
+      "seed": 11,
+      "support_each_player": 48
+    },
+    {
+      "abs_gap_chips": 1.647742002691281,
+      "dcfr_seconds": 8.203852942000026,
+      "dcfr_value_chips": -14.98901170903735,
+      "gap_pct_of_pot": 0.8238710013456405,
+      "iterations": 1000,
+      "lp_seconds": 12.743174271000044,
+      "lp_value_chips": -13.341269706346068,
+      "seed": 13,
+      "support_each_player": 48
+    },
+    {
+      "abs_gap_chips": 0.4164411120428433,
+      "dcfr_seconds": 8.224283712999977,
+      "dcfr_value_chips": 0.3032986685036697,
+      "gap_pct_of_pot": 0.20822055602142164,
+      "iterations": 1000,
+      "lp_seconds": 33.534098427,
+      "lp_value_chips": 0.719739780546513,
+      "seed": 7,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.03742905085060144,
+      "dcfr_seconds": 8.386838030999911,
+      "dcfr_value_chips": 21.99693233911065,
+      "gap_pct_of_pot": 0.01871452542530072,
+      "iterations": 1000,
+      "lp_seconds": 32.52855433299999,
+      "lp_value_chips": 22.03436138996125,
+      "seed": 11,
+      "support_each_player": 64
+    },
+    {
+      "abs_gap_chips": 0.6413797432310533,
+      "dcfr_seconds": 8.430872502000057,
+      "dcfr_value_chips": -7.6265281931022,
+      "gap_pct_of_pot": 0.32068987161552664,
+      "iterations": 1000,
+      "lp_seconds": 41.86074113900008,
+      "lp_value_chips": -8.267907936333254,
+      "seed": 13,
+      "support_each_player": 64
+    }
+  ],
+  "widest_support": 64,
+  "worst_gap_pct_of_pot_by_iterations": {
+    "500": 1.159763983747323,
+    "1000": 0.32068987161552664,
+    "2000": 0.16059021355134065,
+    "4000": 0.06651824742046214
+  },
+  "worst_gap_pct_of_pot_by_support": {
+    "6": 0.9774648149025396,
+    "12": 0.2874097224470802,
+    "24": 0.5010947965289736,
+    "48": 0.8238710013456405,
+    "64": 0.32068987161552664
+  }
+}

@@ -94,8 +94,10 @@ rows['evidence_status']={
     'dcfr_iterations_per_player_paper':4_000,
     'dcfr_alpha':1.5,'dcfr_beta':0.0,'delayed_average_d':100,
     'simultaneous_update_for_river_private_code':'UNRESOLVED',
-    'integer_action_rounding_private_code':'UNRESOLVED',
+    'integer_action_rounding_private_code':'UNRESOLVED_MEASURED_NEGLIGIBLE',
     'private_rng_seed_schedule':'UNRESOLVED',
+    'pot_category_100_100':'RESOLVED_BY_GAME_RULES',
+    'equal_strength_tie_order':'UNRESOLVED_MEASURED_SAMPLE_NOT_VALUE',
     'river_bucket_artifact':'MISSING',
     'raw_fullcard_target_layer':'IMPLEMENTED',
 }
