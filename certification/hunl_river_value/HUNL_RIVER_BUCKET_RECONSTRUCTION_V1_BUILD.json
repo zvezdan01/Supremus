@@ -1,0 +1,15 @@
+{
+  "artifact_sha256": "50f994efd17d191cf8b4434b66dc27892e7131b718621a389aca575ccbf2d617",
+  "centroid_sha256": "ea386b8e3b2bd4861b5e59711356e4a94b49d09e1c942b5673c0eeebcc61bbbf",
+  "feature_seconds": 0.6315854289969138,
+  "fit_seconds": 4.883174948998203,
+  "meta": {
+    "board_stream_sha256": "c24c70050d49b1584a3a15e0218df8792c15810f11806c863741f81b2ce8da7f",
+    "boards": 256,
+    "feature_sha256": "db4c97a5445e613f5e709484c10cdeb236f64795e63609e9170acae09a8a1a44",
+    "hands_per_board": 512,
+    "samples": 131072,
+    "seed": 20260816
+  },
+  "training_samples": 131072
+}

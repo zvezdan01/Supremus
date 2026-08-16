@@ -10,3 +10,6 @@ __pycache__/
 datagen_out/
 shards/
 *.shard
+
+# engineering smoke checkpoints: regenerable, never a production model
+*.pt

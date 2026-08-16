@@ -85,3 +85,73 @@ have no bearing on the Supremus line.
 states Supremus generated its random training subgames "in a manner identical to
 DeepStack", so the DeepStack-faithful subgame generator is a dependency of
 Supremus datagen, not a contamination of it.
+
+---
+
+# 2026-08-16 — river bucket + CFVnet V1
+
+Imported from the owner's `huhlgoldencorerivercfvnetv6` snapshot. Two caveats
+about that upload, both material:
+
+1. The archive contained **only** `FORENSICS/`, `certification/` and
+   `third_party/` — no `hunl/` source tree. The V1 source modules therefore did
+   not arrive.
+2. The archive was **truncated** at 18,087,936 bytes, losing its zip central
+   directory. 547 of 548 entries were recovered intact from their local
+   headers; the single casualty was
+   `HUNL_RIVER_CFVNET_3SAMPLE_SMOKE.pt` (12,070,493 of 12,949,798 bytes).
+
+## Reconstructed here, NOT copied
+
+These do not match the original source bytes and are independent rewrites from
+the milestone specification. See
+`certification/hunl_river_value/HUNL_RIVER_BUCKET_REPRODUCTION_V1.md`.
+
+| file | sha256 (this repo) | sha256 recorded for the original |
+|---|---|---|
+| `hunl/river_bucket_reconstruction.py` | `b93faf77fbbfd858b71f54947268dd2fb17c5bc7aeaec8faced6728e5f61ef47` | `abc73044c7f577c6547aa2082e71f12807d6102d32c5af3dae33a0aa854c05dc` |
+| `hunl/value_training.py` | `92bfa6f27358a8420747599750836252754777dcba77f10e1fca200927eab3dc` | `77ed9ad40ca2c0075556cdf58ec90a170f89a715406afe8a52404157c367e3ca` |
+
+The rewrites are validated by output, not by bytes: the V1 bucket artifact is
+reproduced **byte for byte** (`50f994ef…f2d617`), and the owner's unmodified
+`build_and_cert_river_value_v1.py` runs against them to `status: PASS` with
+`loss_initial` identical to all 16 digits.
+
+## Copied byte-for-byte from the snapshot
+
+| file | sha256 |
+|---|---|
+| `certification/hunl_river_value/HUNL_RIVER_BUCKET_RECONSTRUCTION_V1.npz` | `50f994efd17d191cf8b4434b66dc27892e7131b718621a389aca575ccbf2d617` |
+| `certification/hunl_river_value/HUNL_RIVER_BUCKET_RECONSTRUCTION_V1_BUILD.json` | `689333ad9b104dcd17e178949e6f9f5f776db5789f12394e0d5b10550fd3f5b4` |
+| `certification/hunl_river_value/HUNL_RIVER_VALUE_V1_CERT.json` | `0e5fc96c25f4a053a9e765c86887c4dbad88bca43271037bb48678adbd9fa666` |
+| `certification/hunl_river_value/HUNL_RIVER_VALUE_V1_MILESTONE.md` | `a1e07571e9411a0b9305f2399ee550d8298b415777739376e1df70062fc436be` |
+| `certification/hunl_river_value/HUNL_RIVER_VALUE_V1_SMOKE.npz` | `7216c5b6a6ed4770646bbc8875423b9ba58a455db0eb866af4b1799a741cbf93` |
+| `certification/hunl_river_value/HUNL_RIVER_CFVNET_MULTIBOARD_SMOKE_V1.json` | `e41aa51b03fb1ce6acaba0028fbb9a9c6e68fab0ba9949e78b5577563582092b` |
+| `certification/hunl_river_value/HUNL_RIVER_FULLCARD_MINISET_3x4000.npz` | `66ebd8a2dcb964bd64ed33748ba2d30d781736ff37e6f278c36f00d54590bc34` |
+| `certification/hunl_river_value/river_4000_seed124.npz` | `0bec1cdc8249ebc2613a000869f58437b8a4bf95a86993e8361585e5ff6f5f15` |
+| `certification/hunl_river_value/river_4000_seed126.npz` | `dc687172cd553ffa61e4456d5e37c04afd43a3a32c7a2778ebddcf2a87617f6a` |
+| `certification/hunl_river_value/SHA256SUMS_RIVER_VALUE_V1.txt` | `aaf63659e0607106ac8203d041553078d47ff4344b0cb6c84137fd68ee1ffb65` |
+| `certification/hunl_river_value/build_and_cert_river_value_v1.py` | `6815228c00f3e7d2ae77b9ffa13228a7c2b23d25f04f9a658ff6937bd31728ac` |
+| `certification/hunl_river_value/build_river_mini_dataset.py` | `7ff3f098718fd469bfac3ffed2c7098419d7b84cb791590ee5560b8e2b493809` |
+| `certification/hunl_river_value/run_multiboard_training_smoke.py` | `0dddbedf4c88ed6e79104582a1e92d56f90b09c202f33e8d2e1f87825372de39` |
+| `hunl/value_bucketing.py` | `cd5d924ede5bd81b9f14ce5408d2728e60fb387b9693968094f66fbc007df696` |
+| `hunl/value_network.py` | `3f90649a7616f6f3dca6864583059cd761cffe9fd1c742a048c088506a25198b` |
+
+## Late-discovered core dependency
+
+`hunl/evaluator.py` loads its rank tables at **import** time, from a path that
+no static import graph reveals. The first extraction therefore could not run at
+all. Added:
+
+| file | sha256 | origin |
+|---|---|---|
+| `third_party/CFR_plus/evalHandTables` | `53248e54bafb8fbc67830230baf4ad92abaf1e95425c0326e14e7e7a82ef8425` | ACPC / CPRG, University of Alberta — see third_party/CFR_plus/LICENCE |
+
+## Not committed
+
+- `HUNL_RIVER_CFVNET_3SAMPLE_SMOKE.pt` — arrived truncated, and is an
+  `ENGINEERING_SMOKE_NOT_PRODUCTION_MODEL` checkpoint that
+  `run_multiboard_training_smoke.py` regenerates in ~3.4 s. `*.pt` is ignored.
+- `river_4000_seed123.npz` — absent from the snapshot. The same subgame is
+  present as `certification/hunl_river_datagen/HUNL_RIVER_RANDOM_4000_ANCHOR.npz`
+  (`f853aafa…`), which the miniset manifest confirms is its source.

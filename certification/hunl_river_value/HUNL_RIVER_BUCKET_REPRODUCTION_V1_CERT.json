@@ -1,0 +1,23 @@
+{
+  "anchor_bucket_occupancy": {
+    "22-12-17-3-34": 91,
+    "30-27-50-25-47": 28,
+    "6-1-46-50-0": 95
+  },
+  "bucket_fit_seconds": 8.484352948999913,
+  "claim": "V1 river bucket artifact independently reproduced from the milestone specification alone, byte for byte",
+  "failures": [],
+  "feature_generation_seconds": 2.8160985639997307,
+  "not_a_claim": "says nothing about the private Supremus bucketizer, which remains unpublished",
+  "numeric_contract": "features quantized to float32, k-means fitted in float64 over those values, centroids narrowed to float32 on save",
+  "objective_history_bit_exact": true,
+  "range_mass_error": 0.0,
+  "range_value_duality_error": 2.7755575615628914e-17,
+  "reproduced_artifact_sha256": "50f994efd17d191cf8b4434b66dc27892e7131b718621a389aca575ccbf2d617",
+  "reproduced_board_stream_sha256": "c24c70050d49b1584a3a15e0218df8792c15810f11806c863741f81b2ce8da7f",
+  "reproduced_centroid_sha256": "ea386b8e3b2bd4861b5e59711356e4a94b49d09e1c942b5673c0eeebcc61bbbf",
+  "reproduced_feature_sha256": "db4c97a5445e613f5e709484c10cdeb236f64795e63609e9170acae09a8a1a44",
+  "schema": "HUNL_RIVER_BUCKET_REPRODUCTION_V1_CERT",
+  "status": "PASS",
+  "suit_assignment_checks": 64
+}

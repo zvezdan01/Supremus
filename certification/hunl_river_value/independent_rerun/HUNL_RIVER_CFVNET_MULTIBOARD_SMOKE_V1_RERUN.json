@@ -1,0 +1,72 @@
+{
+  "boards": [
+    [
+      6,
+      1,
+      46,
+      50,
+      0
+    ],
+    [
+      22,
+      12,
+      17,
+      3,
+      34
+    ],
+    [
+      30,
+      27,
+      50,
+      25,
+      47
+    ]
+  ],
+  "bucket_occupancy": [
+    {
+      "legal_hands": 1081,
+      "used_buckets": 95
+    },
+    {
+      "legal_hands": 1081,
+      "used_buckets": 91
+    },
+    {
+      "legal_hands": 1081,
+      "used_buckets": 28
+    }
+  ],
+  "checkpoint": "HUNL_RIVER_CFVNET_3SAMPLE_SMOKE.pt",
+  "checkpoint_sha256": "68157799b1a59d693cad30dc4e4069df0d51c93eb00c67595c328b965d6d7af3",
+  "claim": "ENGINEERING_SMOKE_NOT_PRODUCTION_MODEL",
+  "loss_final": 0.0005699432222172618,
+  "loss_initial": 0.26161718368530273,
+  "loss_min": 0.0005851511959917843,
+  "miniset": "HUNL_RIVER_FULLCARD_MINISET_3x4000.npz",
+  "miniset_sha256": "66ebd8a2dcb964bd64ed33748ba2d30d781736ff37e6f278c36f00d54590bc34",
+  "per_sample_final_loss": [
+    0.001020541531033814,
+    0.0003646187833510339,
+    0.0003246692649554461
+  ],
+  "pot_halves": [
+    301,
+    1829,
+    1932
+  ],
+  "samples": 3,
+  "schema": "HUNL_RIVER_CFVNET_MULTIBOARD_SMOKE_V1",
+  "source_npz_sha256": [
+    "f853aafa3d59d7b4db80acfb5a9a742204590cad2ce8f752e95b4af0fdfd6f89",
+    "0bec1cdc8249ebc2613a000869f58437b8a4bf95a86993e8361585e5ff6f5f15",
+    "dc687172cd553ffa61e4456d5e37c04afd43a3a32c7a2778ebddcf2a87617f6a"
+  ],
+  "status": "PASS",
+  "training_seconds": 3.408137121999971,
+  "training_steps": 120,
+  "weighted_zero_sum_residual_abs": [
+    4.563480615615845e-08,
+    1.6763806343078613e-08,
+    2.0954757928848267e-09
+  ]
+}
