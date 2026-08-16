@@ -98,16 +98,29 @@ split size does not add a second peak.
 
 ## 3. How to read it
 
+The run reports **three** validation numbers per point, because the paper
+states neither the space its Table 1 figures are averaged over nor how per-hand
+values reduce to a bucket value:
+
+| column | what it is |
+|---|---|
+| `val (card)` | card-space masked Huber after inverse bucketing — this project's convention, the one that is optimized, and the only one the encoding floor applies to |
+| `val (bucket sum)` | bucket target is the **sum** of per-hand CFVs, as released DeepStack-Leduc does. Grows with bucket population, so it sits on a much larger scale |
+| `val (bucket mean)` | reach-weighted conditional expectation per bucket — the literal reading of the paper's "expected values of each of the 1,000 buckets" |
+
+On an untrained network these came out 0.26, 8.10 and 0.51 respectively, so the
+choice of reading matters by more than an order of magnitude. Reporting all
+three brackets what the paper plausibly meant; it does not guarantee one is
+comparable, since a fourth convention would leave all three wrong.
+
 Two reference points, both already measured in this repository:
 
 | marker | value | meaning |
 |---|---|---|
-| encoding floor | **4.34e-04** | best possible given the 1000-bucket abstraction |
-| paper's river validation | **1.5e-02** | Supremus on 50M subgames, averaging space unstated |
+| encoding floor | **4.34e-04** | best possible given the 1000-bucket abstraction, in **card space** |
+| paper's river validation | **1.5e-02** | Supremus on 50M subgames, space unstated |
 
-The loss here is card-space masked Huber after inverse bucketing — this
-project's convention. The paper does not state its own, so treat 1.5e-02 as an
-order of magnitude, not a target to hit.
+Treat 1.5e-02 as an order of magnitude, not a target to hit.
 
 What the shapes mean:
 

@@ -16,8 +16,32 @@ Read the result against two reference points, both already measured:
   subgames, and in an averaging space the paper never states, so it is an order
   of magnitude to aim at, not a number to match.
 
-The loss here is this project's convention throughout: card-space masked Huber
-after inverse bucketing, against raw solver CFVs normalized by total pot.
+Training optimizes this project's convention throughout: card-space masked
+Huber after inverse bucketing, against raw solver CFVs normalized by total pot.
+
+Two **bucket-space** losses are reported alongside it, optimized by nothing.
+The paper states neither the space its Table 1 figures are averaged over nor
+how per-hand values reduce to a bucket value, and the two candidates differ by
+more than an order of magnitude, so a single number would be a coin flip:
+
+``bucket_sum``
+    the bucket target is the *sum* of the per-hand CFVs in it, which is what
+    released DeepStack-Leduc does — `data_generation.lua:116-120` applies
+    `card_range_to_bucket_range`, a matrix sum, to values. Bucket sums grow
+    with bucket population, so this sits on a much larger scale than card
+    space.
+``bucket_mean``
+    the reach-weighted conditional expectation of the CFV given the bucket,
+    under that player's own range. This is the literal reading of the paper's
+    "the expected values of each of the 1,000 buckets".
+
+The mask is the set of occupied buckets in both cases, following
+`bucket_conversion.lua:70-74`. See `certification/RELEASED_CODE_EVIDENCE.md`
+items 9 and 10.
+
+Reporting all three does not guarantee one is comparable — a fourth convention
+would leave all three wrong — but it brackets what the paper plausibly meant
+instead of betting on one reading.
 
 Usage:
     python -m certification.hunl_river_value.run_river_training_curve \
@@ -83,7 +107,28 @@ def precompute(boards, pots, ranges, targets, provider, pot_convention="TOTAL_PO
         legal[i] = batch.legal_mask[0]
         ids = batch.maps[0].hand_to_bucket.astype(np.int64)
         bucket_ids[i] = torch.as_tensor(np.where(ids >= 0, ids, 0))
-    return inputs, card_targets, legal, bucket_ids
+
+    # Bucket-space view of the same data. Illegal hands are zeroed before the
+    # scatter, because their bucket id was clamped to 0 and would otherwise
+    # pile into bucket 0.
+    contribution = card_targets * legal.unsqueeze(1)
+    ids2 = bucket_ids.unsqueeze(1).expand(-1, 2, -1)
+    bucket_sum = torch.zeros(n, 2, POSTFLOP_BUCKET_COUNT).scatter_add_(
+        2, ids2, contribution)
+    occupied = torch.zeros(n, POSTFLOP_BUCKET_COUNT).scatter_add_(
+        1, bucket_ids, legal.float()) > 0
+
+    # Reach-weighted conditional expectation per bucket. Weights are the
+    # player's own range, taken from the normalized bucket ranges already in
+    # the network input, so the two views cannot drift apart.
+    reach = torch.as_tensor(np.asarray(ranges, dtype=np.float32)) * legal.unsqueeze(1)
+    weight = torch.zeros(n, 2, POSTFLOP_BUCKET_COUNT).scatter_add_(2, ids2, reach)
+    weighted = torch.zeros(n, 2, POSTFLOP_BUCKET_COUNT).scatter_add_(
+        2, ids2, reach * card_targets)
+    bucket_mean = torch.where(weight > 0, weighted / weight.clamp(min=1e-30),
+                              torch.zeros_like(weight))
+    return (inputs, card_targets, legal, bucket_ids,
+            bucket_sum, bucket_mean, occupied)
 
 
 def card_values(model, inputs, bucket_ids):
@@ -96,6 +141,26 @@ def card_values(model, inputs, bucket_ids):
 def masked_huber(values, targets, legal):
     mask = legal.unsqueeze(1).expand_as(values)
     return F.smooth_l1_loss(values[mask], targets[mask], beta=1.0, reduction="mean")
+
+
+@torch.no_grad()
+def eval_bucket_huber(model, inputs, bucket_targets, occupied, chunk=512):
+    """Masked Huber in bucket space, on the network's raw 2000 outputs.
+
+    ``bucket_targets`` selects the reduction: sums or reach-weighted means.
+    """
+    total = 0.0
+    count = 0
+    for lo in range(0, len(inputs), chunk):
+        hi = min(len(inputs), lo + chunk)
+        out = model(inputs[lo:hi]).reshape(-1, 2, POSTFLOP_BUCKET_COUNT)
+        m = occupied[lo:hi].unsqueeze(1).expand_as(out)
+        n = int(m.sum())
+        if n:
+            total += float(F.smooth_l1_loss(out[m], bucket_targets[lo:hi][m],
+                                            beta=1.0, reduction="sum"))
+            count += n
+    return total / max(count, 1)
 
 
 @torch.no_grad()
@@ -141,13 +206,14 @@ def verify_vectorized_path(model, boards, pots, ranges, targets, provider,
 
 
 def train_once(n_train, tr, va, epochs, batch_size, lr, seed, optimizer="adam"):
-    inputs, card_targets, legal, bucket_ids = tr
-    v_inputs, v_targets, v_legal, v_ids = va
+    inputs, card_targets, legal, bucket_ids = tr[:4]
+    v_inputs, v_targets, v_legal, v_ids, v_bsum, v_bmean, v_occupied = va
     torch.manual_seed(seed)
     model = DeepStackHUNLValueNet(HUNLValueNetworkSpec())
     make = torch.optim.AdamW if optimizer == "adamw" else torch.optim.Adam
     opt = make(model.parameters(), lr=lr)
     best = float("inf")
+    best_bucket = (float("nan"), float("nan"))
     history = []
     for epoch in range(epochs):
         model.train()
@@ -163,9 +229,15 @@ def train_once(n_train, tr, va, epochs, batch_size, lr, seed, optimizer="adam"):
         val = eval_masked_huber(model, v_inputs, v_targets, v_legal, v_ids)
         trn = eval_masked_huber(model, inputs[:n_train], card_targets[:n_train],
                                 legal[:n_train], bucket_ids[:n_train])
-        history.append({"epoch": epoch, "train": trn, "validation": val})
-        best = min(best, val)
-    return best, history[-1]["train"], history
+        val_sum = eval_bucket_huber(model, v_inputs, v_bsum, v_occupied)
+        val_mean = eval_bucket_huber(model, v_inputs, v_bmean, v_occupied)
+        history.append({"epoch": epoch, "train": trn, "validation": val,
+                        "validation_bucket_sum": val_sum,
+                        "validation_bucket_mean": val_mean})
+        if val < best:
+            best = val
+            best_bucket = (val_sum, val_mean)
+    return best, best_bucket, history[-1]["train"], history
 
 
 def main() -> None:
@@ -212,7 +284,7 @@ def main() -> None:
     torch.manual_seed(SEED)
     probe = DeepStackHUNLValueNet(HUNLValueNetworkSpec())
     delta = verify_vectorized_path(probe, boards[train_idx], pots[train_idx],
-                                   ranges[train_idx], targets[train_idx], provider, *tr,
+                                   ranges[train_idx], targets[train_idx], provider, *tr[:4],
                                    pot_convention=args.pot_convention)
     print(f"fast path vs reference loss_on_prepared_batch: |delta| = {delta:.3e}", flush=True)
     if delta > 1e-6:
@@ -226,11 +298,13 @@ def main() -> None:
     points = []
     for size in sizes:
         started = time.perf_counter()
-        best, final_train, _ = train_once(size, tr, va, args.epochs, args.batch_size,
-                                          args.lr, SEED, args.optimizer)
+        best, best_bucket, final_train, _ = train_once(
+            size, tr, va, args.epochs, args.batch_size, args.lr, SEED, args.optimizer)
         points.append({
             "train_samples": size,
             "best_validation_huber": best,
+            "validation_huber_bucket_sum": best_bucket[0],
+            "validation_huber_bucket_mean": best_bucket[1],
             "final_train_huber": final_train,
             "seconds": time.perf_counter() - started,
         })
@@ -247,8 +321,20 @@ def main() -> None:
         "learning_rate": args.lr,
         "optimizer": args.optimizer,
         "pot_convention": args.pot_convention,
-        "loss_convention": "card-space masked Huber after inverse bucketing, "
-                           "targets = raw chips / total pot",
+        "loss_convention": "training optimizes card-space masked Huber after "
+                           "inverse bucketing, targets = raw chips / total pot",
+        "bucket_sum_convention": "reported only, never optimized: bucket target "
+                                 "is the sum of per-hand CFVs, per released "
+                                 "DeepStack-Leduc data_generation.lua:116-120",
+        "bucket_mean_convention": "reported only: reach-weighted conditional "
+                                  "expectation per bucket, the literal reading "
+                                  "of the paper's 'expected values of each of "
+                                  "the 1,000 buckets'",
+        "why_three_numbers": "the paper states neither the averaging space nor "
+                             "the card-to-bucket reduction, and the candidates "
+                             "differ by over an order of magnitude; three "
+                             "numbers bracket the plausible readings instead of "
+                             "betting on one",
         "reference_encoding_floor": ENCODING_FLOOR,
         "reference_paper_river_validation": PAPER_RIVER_VALIDATION,
         "curve": points,
@@ -261,11 +347,16 @@ def main() -> None:
     out = HERE / "HUNL_RIVER_TRAINING_CURVE_V1.json"
     out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
 
-    print("\n  samples   best val Huber   x floor   train Huber")
+    print("\n  samples   val (card)   x floor   val (bucket sum)  val (bucket mean)   train")
     for p in points:
-        print(f"  {p['train_samples']:7d}   {p['best_validation_huber']:14.3e}"
+        print(f"  {p['train_samples']:7d}   {p['best_validation_huber']:10.3e}"
               f"   {p['best_validation_huber']/ENCODING_FLOOR:7.2f}"
-              f"   {p['final_train_huber']:11.3e}")
+              f"   {p['validation_huber_bucket_sum']:16.3e}"
+              f"   {p['validation_huber_bucket_mean']:17.3e}"
+              f"   {p['final_train_huber']:9.3e}")
+    print("\n  card space is this project's convention and the one the "
+          "encoding floor applies to;\n  bucket space is for comparison with "
+          "the paper's Table 1 if that is the space it used.")
     print(f"\n{out}")
 
 
