@@ -47,12 +47,24 @@ the averaging convention stated alongside it.
 Each subgame solved with 4,000 iterations per player of DCFR+, random subgames
 generated "in a manner identical to DeepStack".
 
-Scale check for this repository: the current CPU river solve runs ~33.6 s per
-4,000-iteration subgame. 50M subgames is therefore ~53,000 core-years on this
-backend. The paper's implementation is end-to-end CUDA. **Matching the paper's
-data volume is not reachable here**; the targets above are what a smaller
-run should be measured against, with the sample count always reported next to
-the loss.
+Scale check for this repository, at the measured ~33.6 s per 4,000-iteration
+CPU subgame:
+
+| dataset | core-years | 16 cores | 256 cores |
+|---|---|---|---|
+| 100k subgames | 0.11 | 2.4 days | 6 hours |
+| 1M | 1.06 | 24 days | 1.5 days |
+| 5M (flop target) | 5.3 | 122 days | 7.6 days |
+| 20M (turn target) | 21.3 | 486 days | 30 days |
+| 50M (river target) | 53.2 | 1215 days | 76 days |
+
+So the paper's full river volume is **expensive but not absurd** — roughly 53
+core-years, which is ~2.5 months of a 256-core machine, before any GPU port.
+The paper's implementation is end-to-end CUDA and reports a >6x speedup on
+comparable search, so the real gap is smaller still.
+
+Always report the sample count next to any loss figure: a loss from 100k
+subgames and a loss from 50M are not the same claim.
 
 ## Table 2 — action abstraction (p.7)
 
