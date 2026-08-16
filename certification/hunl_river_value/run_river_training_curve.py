@@ -98,6 +98,29 @@ def masked_huber(values, targets, legal):
     return F.smooth_l1_loss(values[mask], targets[mask], beta=1.0, reduction="mean")
 
 
+@torch.no_grad()
+def eval_masked_huber(model, inputs, card_targets, legal, bucket_ids, chunk=512):
+    """Masked Huber over a whole split, in chunks.
+
+    A single forward pass over 100k rows would materialize [100k,2,1326] card
+    values (~1 GB) plus the mask expansion, so evaluation is chunked and the
+    per-element mean is reassembled from element counts rather than averaging
+    the chunk means, which would misweight unequal chunks.
+    """
+    total = 0.0
+    count = 0
+    for lo in range(0, len(inputs), chunk):
+        hi = min(len(inputs), lo + chunk)
+        v = card_values(model, inputs[lo:hi], bucket_ids[lo:hi])
+        m = legal[lo:hi].unsqueeze(1).expand_as(v)
+        n = int(m.sum())
+        if n:
+            total += float(F.smooth_l1_loss(v[m], card_targets[lo:hi][m],
+                                            beta=1.0, reduction="sum"))
+            count += n
+    return total / max(count, 1)
+
+
 def verify_vectorized_path(model, boards, pots, ranges, targets, provider,
                            inputs, card_targets, legal, bucket_ids,
                            pot_convention="TOTAL_POT") -> float:
@@ -137,10 +160,9 @@ def train_once(n_train, tr, va, epochs, batch_size, lr, seed, optimizer="adam"):
             loss.backward()
             opt.step()
         model.eval()
-        with torch.no_grad():
-            val = float(masked_huber(card_values(model, v_inputs, v_ids), v_targets, v_legal))
-            trn = float(masked_huber(card_values(model, inputs[:n_train], bucket_ids[:n_train]),
-                                     card_targets[:n_train], legal[:n_train]))
+        val = eval_masked_huber(model, v_inputs, v_targets, v_legal, v_ids)
+        trn = eval_masked_huber(model, inputs[:n_train], card_targets[:n_train],
+                                legal[:n_train], bucket_ids[:n_train])
         history.append({"epoch": epoch, "train": trn, "validation": val})
         best = min(best, val)
     return best, history[-1]["train"], history

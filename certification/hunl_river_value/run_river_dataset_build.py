@@ -61,6 +61,26 @@ def parse_shards(spec: str) -> list[int]:
     return out
 
 
+def check_samples_per_shard(out_dir: Path, n: int) -> None:
+    """Global sample index is shard*n + i, so n must never change for a corpus.
+
+    Re-running with a different --samples-per-shard would keep the same shard
+    filenames while pointing them at different global indices, silently mixing
+    duplicated and missing samples into one dataset. Refuse instead.
+    """
+    stamp = out_dir / "SAMPLES_PER_SHARD"
+    if stamp.exists():
+        previous = int(stamp.read_text().strip())
+        if previous != n:
+            raise SystemExit(
+                f"{out_dir} was built with --samples-per-shard {previous}, "
+                f"not {n}. Global sample indices are shard*n+i, so mixing the "
+                f"two would corrupt the corpus. Use {previous}, or a new --out."
+            )
+    else:
+        stamp.write_text(f"{n}\n")
+
+
 def build_shard(gen: RiverDataGeneratorV1, shard: int, n: int, out_dir: Path) -> dict:
     final = out_dir / f"river_shard_{shard:05d}.npz"
     if final.exists():
@@ -120,6 +140,7 @@ def main() -> None:
 
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
+    check_samples_per_shard(out_dir, args.samples_per_shard)
     gen = RiverDataGeneratorV1(RiverDatagenV1Config(
         mode=RiverDatagenMode.PAPER_RECONSTRUCTION,
         batch_size=1,

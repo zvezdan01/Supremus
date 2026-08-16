@@ -81,6 +81,21 @@ Before training it checks its own fast path against the project's reference
 `loss_on_prepared_batch` and aborts if they disagree by more than 1e-6, so the
 curve cannot silently be measuring something other than the certified loss.
 
+Two flags exist for the forks that `certification/RELEASED_CODE_EVIDENCE.md`
+opened, both defaulting to the current behaviour:
+
+- `--pot-convention TOTAL_POT|POT_HALF` — the Supremus paper's literal reading
+  versus released DeepStack-Leduc. Changes every loss by roughly a factor of
+  three, so never compare across it.
+- `--optimizer adam|adamw` — Adam at 1e-3 is the released setting and the
+  default; AdamW at 3e-4 is the DEVN third-party choice.
+
+Resource notes for larger runs. Bucketing is a Python loop with an exact
+1326×1326 equity computation per subgame, about 25 ms each: **~40 minutes for
+100k subgames**, once, before training starts. Held tensors are roughly 30 KB
+per subgame, so 100k needs **~3 GB of RAM**. Evaluation is chunked, so the
+split size does not add a second peak.
+
 ## 3. How to read it
 
 Two reference points, both already measured in this repository:

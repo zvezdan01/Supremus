@@ -6,6 +6,7 @@
     "the 3-sample smoke reached 5.70e-04 against a 4.34e-04 floor, i.e. it is already within ~31% of everything the bucketing permits \u2014 further training on those three subgames cannot help",
     "the paper's river validation target is ~35x above this floor, so its error is dominated by generalization to unseen boards and ranges, not by the abstraction"
   ],
+  "mean_vs_huber_optimum_max_abs_diff": 2.710505431213761e-20,
   "measurements": [
     {
       "board": [
@@ -17,6 +18,7 @@
       ],
       "buckets_occupied": 95,
       "huber_floor": 0.0012064037638439876,
+      "huber_floor_via_huber_optimum": 0.0012064037638439876,
       "live_hands": 1081,
       "player": 0,
       "rmse_floor_fraction_of_pot": 0.04912033721065008,
@@ -32,6 +34,7 @@
       ],
       "buckets_occupied": 95,
       "huber_floor": 0.0006856400662376187,
+      "huber_floor_via_huber_optimum": 0.0006856400662376187,
       "live_hands": 1081,
       "player": 1,
       "rmse_floor_fraction_of_pot": 0.03703079978173895,
@@ -47,6 +50,7 @@
       ],
       "buckets_occupied": 91,
       "huber_floor": 0.00015732329283315287,
+      "huber_floor_via_huber_optimum": 0.0001573232928331529,
       "live_hands": 1081,
       "player": 0,
       "rmse_floor_fraction_of_pot": 0.01773828023418014,
@@ -62,6 +66,7 @@
       ],
       "buckets_occupied": 91,
       "huber_floor": 0.0001420369590912981,
+      "huber_floor_via_huber_optimum": 0.0001420369590912981,
       "live_hands": 1081,
       "player": 1,
       "rmse_floor_fraction_of_pot": 0.016854492522250446,
@@ -77,6 +82,7 @@
       ],
       "buckets_occupied": 28,
       "huber_floor": 0.00011970419098442414,
+      "huber_floor_via_huber_optimum": 0.00011970419098442414,
       "live_hands": 1081,
       "player": 0,
       "rmse_floor_fraction_of_pot": 0.015472827213177567,
@@ -92,6 +98,7 @@
       ],
       "buckets_occupied": 28,
       "huber_floor": 0.0002949354874079947,
+      "huber_floor_via_huber_optimum": 0.0002949354874079947,
       "live_hands": 1081,
       "player": 1,
       "rmse_floor_fraction_of_pot": 0.02428725951637997,

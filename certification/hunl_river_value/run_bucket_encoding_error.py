@@ -39,6 +39,18 @@ boards, pots, ranges, targets = z["boards"], z["pot_half"], z["ranges"], z["targ
 provider = ReconstructedRiverBucketProvider(
     RiverReconstructionArtifact.load(HERE / "HUNL_RIVER_BUCKET_RECONSTRUCTION_V1.npz"))
 
+def _huber_optimal_constant(v: np.ndarray, beta: float = 1.0) -> float:
+    """argmin_c sum smooth_l1(c - v_i): the derivative is monotone, so bisect."""
+    lo, hi = float(v.min()), float(v.max())
+    for _ in range(80):
+        c = 0.5 * (lo + hi)
+        if np.clip(c - v, -beta, beta).sum() > 0:
+            hi = c
+        else:
+            lo = c
+    return 0.5 * (lo + hi)
+
+
 rows = []
 for i in range(len(boards)):
     board = tuple(int(c) for c in boards[i])
@@ -50,11 +62,19 @@ for i in range(len(boards)):
         live = (ranges[i, player] > 0) & (ids >= 0)
         labels, values = ids[live], target[live]
 
-        # Best achievable per-bucket constant under squared error.
+        # Best achievable per-bucket constant. The per-bucket mean minimizes
+        # squared error; the Huber optimum solves sum(clamp(c - v, -1, 1)) = 0
+        # and differs whenever residuals leave the quadratic branch. Targets
+        # here reach |4.8| in pot units, so that is not obvious a priori — but
+        # within-bucket spread is tiny, every residual stays inside the
+        # quadratic branch, and the two coincide. Both are computed and the
+        # agreement is asserted rather than assumed.
         encoded = np.zeros_like(values)
+        encoded_huber = np.zeros_like(values)
         for bucket in np.unique(labels):
             member = labels == bucket
             encoded[member] = values[member].mean()
+            encoded_huber[member] = _huber_optimal_constant(values[member])
 
         rows.append({
             "board": list(board),
@@ -63,6 +83,9 @@ for i in range(len(boards)):
             "live_hands": int(live.sum()),
             "huber_floor": float(F.smooth_l1_loss(torch.tensor(encoded), torch.tensor(values),
                                                   beta=1.0, reduction="mean")),
+            "huber_floor_via_huber_optimum": float(
+                F.smooth_l1_loss(torch.tensor(encoded_huber), torch.tensor(values),
+                                 beta=1.0, reduction="mean")),
             "rmse_floor_fraction_of_pot": float(np.sqrt(((encoded - values) ** 2).mean())),
             "within_bucket_variance_share": float(((values - encoded) ** 2).mean()
                                                   / max(values.var(), 1e-30)),
@@ -87,6 +110,8 @@ result = {
         "paper_river_validation_huber": PAPER_RIVER_VALIDATION,
         "paper_target_over_floor": PAPER_RIVER_VALIDATION / float(np.mean(floors)),
     },
+    "mean_vs_huber_optimum_max_abs_diff": max(
+        abs(r["huber_floor"] - r["huber_floor_via_huber_optimum"]) for r in rows),
     "interpretation": [
         "scalar equity captures 99.3-99.9% of card-space CFV variance on these "
         "boards, so collapsing 1081 hands into 28-95 occupied buckets loses "
