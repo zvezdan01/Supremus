@@ -116,6 +116,17 @@ byte**, and the owner's unmodified V1 harness passes against it with
 The 3-sample CFVnet checkpoint is deliberate overfitting to prove the graph is
 differentiable. It is not a model and is not suitable for play.
 
+## Running the next step
+
+`RUNBOOK.md` has the commands and the timings. In short: generate real subgames
+(`run_river_dataset_build.py`, resumable, ~30 s each per core), then measure
+generalization (`run_river_training_curve.py`). Start with 2,000 subgames — one
+evening on six cores — and extend later without recomputing anything.
+
+Two reference points are already measured here: the **encoding floor 4.34e-04**,
+the best any network can do given the 1000-bucket abstraction
+(`run_bucket_encoding_error.py`), and the paper's **river validation 1.5e-02**.
+
 ## Next milestone
 
 Build the river 1000-bucket projection and the CFVnet training layer as an

@@ -13,3 +13,4 @@ shards/
 
 # engineering smoke checkpoints: regenerable, never a production model
 *.pt
+logs/
