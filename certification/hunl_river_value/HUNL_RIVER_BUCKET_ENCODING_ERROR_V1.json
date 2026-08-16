@@ -1,0 +1,119 @@
+{
+  "caveat": "three subgames. The floor is exact for these boards but their coordination structure may not be representative \u2014 a coordinated board occupies far fewer buckets (28) than a dry one (95).",
+  "consequence": "capacity and bucketing are adequate; the untested variable is training data volume.",
+  "interpretation": [
+    "scalar equity captures 99.3-99.9% of card-space CFV variance on these boards, so collapsing 1081 hands into 28-95 occupied buckets loses very little",
+    "the 3-sample smoke reached 5.70e-04 against a 4.34e-04 floor, i.e. it is already within ~31% of everything the bucketing permits \u2014 further training on those three subgames cannot help",
+    "the paper's river validation target is ~35x above this floor, so its error is dominated by generalization to unseen boards and ranges, not by the abstraction"
+  ],
+  "measurements": [
+    {
+      "board": [
+        6,
+        1,
+        46,
+        50,
+        0
+      ],
+      "buckets_occupied": 95,
+      "huber_floor": 0.0012064037638439876,
+      "live_hands": 1081,
+      "player": 0,
+      "rmse_floor_fraction_of_pot": 0.04912033721065008,
+      "within_bucket_variance_share": 0.001531463775695521
+    },
+    {
+      "board": [
+        6,
+        1,
+        46,
+        50,
+        0
+      ],
+      "buckets_occupied": 95,
+      "huber_floor": 0.0006856400662376187,
+      "live_hands": 1081,
+      "player": 1,
+      "rmse_floor_fraction_of_pot": 0.03703079978173895,
+      "within_bucket_variance_share": 0.0017267064899066649
+    },
+    {
+      "board": [
+        22,
+        12,
+        17,
+        3,
+        34
+      ],
+      "buckets_occupied": 91,
+      "huber_floor": 0.00015732329283315287,
+      "live_hands": 1081,
+      "player": 0,
+      "rmse_floor_fraction_of_pot": 0.01773828023418014,
+      "within_bucket_variance_share": 0.0006379864037314332
+    },
+    {
+      "board": [
+        22,
+        12,
+        17,
+        3,
+        34
+      ],
+      "buckets_occupied": 91,
+      "huber_floor": 0.0001420369590912981,
+      "live_hands": 1081,
+      "player": 1,
+      "rmse_floor_fraction_of_pot": 0.016854492522250446,
+      "within_bucket_variance_share": 0.007075315481427429
+    },
+    {
+      "board": [
+        30,
+        27,
+        50,
+        25,
+        47
+      ],
+      "buckets_occupied": 28,
+      "huber_floor": 0.00011970419098442414,
+      "live_hands": 1081,
+      "player": 0,
+      "rmse_floor_fraction_of_pot": 0.015472827213177567,
+      "within_bucket_variance_share": 0.001449955953124226
+    },
+    {
+      "board": [
+        30,
+        27,
+        50,
+        25,
+        47
+      ],
+      "buckets_occupied": 28,
+      "huber_floor": 0.0002949354874079947,
+      "live_hands": 1081,
+      "player": 1,
+      "rmse_floor_fraction_of_pot": 0.02428725951637997,
+      "within_bucket_variance_share": 0.0056376222110731365
+    }
+  ],
+  "question": "is the 1000-bucket abstraction the bottleneck, or is data volume?",
+  "schema": "HUNL_RIVER_BUCKET_ENCODING_ERROR_V1",
+  "summary": {
+    "huber_floor_range": [
+      0.00011970419098442414,
+      0.0012064037638439876
+    ],
+    "mean_huber_floor": 0.0004343406267330793,
+    "paper_river_validation_huber": 0.015,
+    "paper_target_over_floor": 34.5351069570062,
+    "smoke_over_floor": 1.3120831321534299,
+    "smoke_run_reached": 0.0005698910099454224,
+    "within_bucket_variance_share_range": [
+      0.0006379864037314332,
+      0.007075315481427429
+    ]
+  },
+  "verdict": "BUCKETING IS NOT THE BOTTLENECK \u2014 data volume is"
+}
