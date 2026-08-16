@@ -20,7 +20,7 @@ Verified on Python 3.11 with numpy 2.4.6, scipy 1.17.1, numba 0.67.0,
 torch 2.13.0. The original snapshot was built under Python 3.13; both work.
 
 Sanity check before spending hours — this rebuilds the frozen bucket artifact
-and must print 21 PASS lines:
+and must print 20 PASS lines:
 
 ```
 python -m certification.hunl_river_value.run_river_bucket_reproduction_cert
